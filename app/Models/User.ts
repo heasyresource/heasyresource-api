@@ -21,6 +21,12 @@ export default class User extends BaseModel {
   @column()
   public phoneNumber: string
 
+  @column()
+  public homeAddress: string
+
+  @column()
+  public maritalStatus: string
+
   @column({ serializeAs: null })
   public password: string
 
@@ -38,6 +44,9 @@ export default class User extends BaseModel {
 
   @column()
   public roleId: string
+
+  @column()
+  public companyId: string
 
   @column({ serializeAs: null })
   public isDeleted: boolean
