@@ -30,4 +30,7 @@ Route.group(() => {
   })
   Route.post('/login', 'Authentication/LoginController.login')
   Route.post('/refresh', 'Authentication/LoginController.refreshToken')
+  Route.post('/password/forgot', 'Password/PasswordController.forgotPassword')
+  Route.post('/password/verify-code', 'Password/PasswordController.verifyResetPasswordCode')
+  Route.put('/password/reset', 'Password/PasswordController.resetPassword')
 }).prefix('/api/v1')
