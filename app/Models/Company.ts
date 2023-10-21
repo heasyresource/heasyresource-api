@@ -26,7 +26,7 @@ export default class Company extends BaseModel {
   @column()
   public industryId: string
 
-  @column({ serializeAs: null })
+  @column()
   public isActive: boolean
 
   @column({ serializeAs: null })

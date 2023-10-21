@@ -1,5 +1,5 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
-import WorkType from 'App/Enums/WorkType'
+import WorkTypes from 'App/Enums/WorkTypes'
 
 export default class extends BaseSchema {
   protected tableName = 'work_experiences'
@@ -12,7 +12,7 @@ export default class extends BaseSchema {
       table.string('position').notNullable()
       table.string('location').nullable()
       table.uuid('employment_type_id').nullable()
-      table.enum('work_type', [WorkType.HYBRID, WorkType.ONSITE, WorkType.REMOTE])
+      table.enum('work_type', [WorkTypes.HYBRID, WorkTypes.ONSITE, WorkTypes.REMOTE])
       table.text('description').nullable()
       table.dateTime('start_date').nullable()
       table.dateTime('end_date').nullable()

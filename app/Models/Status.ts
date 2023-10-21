@@ -21,7 +21,7 @@ export default class Status extends BaseModel {
   public updatedAt: DateTime
 
   @beforeCreate()
-  public static assignUuid(id: Status) {
-    id.id = uuid()
+  public static assignUuid(status: Status) {
+    status.id = uuid()
   }
 }

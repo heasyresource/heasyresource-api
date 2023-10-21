@@ -21,7 +21,7 @@ export default class EmploymentType extends BaseModel {
   public updatedAt: DateTime
 
   @beforeCreate()
-  public static assignUuid(employmentTypes: EmploymentType) {
-    employmentTypes.id = uuid()
+  public static assignUuid(employmentType: EmploymentType) {
+    employmentType.id = uuid()
   }
 }
