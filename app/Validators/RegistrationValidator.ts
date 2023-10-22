@@ -4,12 +4,17 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 export default class RegistrationValidator {
   constructor(protected ctx: HttpContextContract) {}
   public schema = schema.create({
-    companyName: schema.string({ trim: true }),
+    companyName: schema.string({ trim: true }, [
+      rules.unique({ table: 'companies', column: 'name' }),
+    ]),
     companyEmail: schema.string({ trim: true }, [
       rules.email(),
       rules.unique({ table: 'companies', column: 'email' }),
     ]),
-    companyWebsite: schema.string({ trim: true }, [rules.url()]),
+    companyWebsite: schema.string({ trim: true }, [
+      rules.url(),
+      rules.unique({ table: 'companies', column: 'website' }),
+    ]),
     industryId: schema.string({ trim: true }, [rules.uuid()]),
     companyPhoneNumber: schema.string([
       rules.mobile({
@@ -39,10 +44,12 @@ export default class RegistrationValidator {
 
   public messages: CustomMessages = {
     'companyName.required': 'Company name is required.',
+    'companyName.unique': 'Company name address already exist.',
     'companyEmail.required': 'Company email address is required.',
     'companyEmail.email': 'Company email address must be a valid email address.',
     'companyEmail.unique': 'Company email address already exist.',
     'companyWebsite.required': 'Company website is required.',
+    'companyWebsite.unique': 'Company website address already exist.',
     'companyWebsite.url': 'Company website must be a valid url.',
     'industryId.required': 'Please select a valid field/industry.',
     'industryId.uuid': 'Please select a valid field/industry.',
