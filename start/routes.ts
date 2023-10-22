@@ -21,5 +21,19 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.get('/', async () => {
-  return { hello: 'world' }
+  return { welcome: 'Heasyresource API' }
 })
+
+Route.on('/email').render('emails/welcome')
+
+Route.group(() => {
+  Route.get('/', async () => {
+    return { welcome: 'Heasyresource API' }
+  })
+  Route.post('/register', 'Registration/RegistrationController.register')
+  Route.post('/login', 'Authentication/LoginController.login')
+  Route.post('/refresh', 'Authentication/LoginController.refreshToken')
+  Route.post('/password/forgot', 'Password/PasswordController.forgotPassword')
+  Route.post('/password/verify-code', 'Password/PasswordController.verifyResetPasswordCode')
+  Route.put('/password/reset', 'Password/PasswordController.resetPassword')
+}).prefix('/api/v1')

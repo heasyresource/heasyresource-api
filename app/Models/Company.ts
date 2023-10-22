@@ -24,6 +24,9 @@ export default class Company extends BaseModel {
   public address: string
 
   @column()
+  public logoUrl: string
+
+  @column()
   public industryId: string
 
   @column()
