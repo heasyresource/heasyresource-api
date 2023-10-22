@@ -42,8 +42,11 @@ export default class ExceptionHandler extends HttpExceptionHandler {
       return ctx.response.unauthorized({ status: 'Unauthorized', statusCode: 401, message: 'Session Timeout. Please login again.' })
     }
 
-    console.log('DEFAULT ERROR => ', error);
+    console.log('ERROR => ', error);
     
+    if (error && process.env.NODE_ENV == 'production') {
+      return ctx.response.internalServerError({ status: 'Internal Server Error', statusCode: 500, message: 'Internal Server Error.' })
+    }
 
     /**
      * Forward rest of the exceptions to the parent class

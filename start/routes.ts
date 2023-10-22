@@ -24,10 +24,13 @@ Route.get('/', async () => {
   return { welcome: 'Heasyresource API' }
 })
 
+Route.on('/email').render('emails/welcome')
+
 Route.group(() => {
   Route.get('/', async () => {
     return { welcome: 'Heasyresource API' }
   })
+  Route.post('/register', 'Registration/RegistrationController.register')
   Route.post('/login', 'Authentication/LoginController.login')
   Route.post('/refresh', 'Authentication/LoginController.refreshToken')
   Route.post('/password/forgot', 'Password/PasswordController.forgotPassword')
