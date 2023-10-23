@@ -16,6 +16,11 @@ export default class RegistrationValidator {
       rules.unique({ table: 'companies', column: 'website' }),
     ]),
     industryId: schema.string({ trim: true }, [rules.uuid()]),
+    position: schema.string({ trim: true }, [
+      rules.alpha({
+        allow: ['space', 'dash'],
+      }),
+    ]),
     companyPhoneNumber: schema.string([
       rules.mobile({
         strict: true,
@@ -53,12 +58,14 @@ export default class RegistrationValidator {
     'companyWebsite.url': 'Company website must be a valid url.',
     'industryId.required': 'Please select a valid field/industry.',
     'industryId.uuid': 'Please select a valid field/industry.',
+    'firstName.required': 'First name is required.',
+    'firstName.alpha': 'First name should only contain alphabets.',
     'companyPhoneNumber.required': 'Phone number is required.',
     'companyPhoneNumber.mobile':
       'Phone number must be a valid phone number and it must prefixed with country code.',
     'companyPhoneNumber.unique': 'This phone number already exist.',
-    'firstName.required': 'First name is required.',
-    'firstName.alpha': 'First name should only contain alphabets.',
+    'position.required': 'Position is required.',
+    'position.alpha': 'Position should only contain alphabets.',
     'lastName.required': 'Last name is required.',
     'lastName.alpha': 'Last name should only contain alphabets.',
     'email.required': 'Email address is required.',
