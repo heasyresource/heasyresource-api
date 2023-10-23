@@ -4,7 +4,7 @@ import User from 'App/Models/User'
 import Env from '@ioc:Adonis/Core/Env'
 
 export default class VerifyEmail extends BaseMailer {
-  constructor(private user: User, private company = null) {
+  constructor(private user: User) {
     super()
   }
   public prepare(message: MessageContract) {
