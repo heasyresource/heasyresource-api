@@ -3,6 +3,7 @@ import Database from '@ioc:Adonis/Lucid/Database'
 import Roles from 'App/Enums/Roles'
 import VerifyEmail from 'App/Mailers/VerifyEmail'
 import Company from 'App/Models/Company'
+import EmploymentInfo from 'App/Models/EmploymentInfo'
 import Role from 'App/Models/Role'
 import User from 'App/Models/User'
 import RegistrationValidator from 'App/Validators/RegistrationValidator'
@@ -20,6 +21,7 @@ export default class RegistrationController {
       companyPhoneNumber,
       firstName,
       lastName,
+      position,
       email,
       password,
     } = validatedBody
@@ -60,7 +62,19 @@ export default class RegistrationController {
       user.useTransaction(trx)
       await user.save()
       
-      await new VerifyEmail(user, company).sendLater()
+      await new VerifyEmail(user).sendLater()
+
+      const employmentInfo = new EmploymentInfo()
+      employmentInfo.userId = user.id
+      employmentInfo.position = position
+      employmentInfo.employeeId = 'HR-' + randomstring.generate({
+        length: 6,
+        charset: 'alphanumeric',
+        capitalization: 'uppercase'
+      })
+      
+      employmentInfo.useTransaction(trx)
+      await employmentInfo.save()
     })
 
 

@@ -31,6 +31,8 @@ Route.group(() => {
     return { welcome: 'Heasyresource API' }
   })
   Route.post('/register', 'Registration/RegistrationController.register')
+  Route.post('/account/verify', 'Verification/VerificationController.verifyAccount')
+  Route.post('/account/resend-code', 'Verification/VerificationController.resendVerificationCode')
   Route.post('/login', 'Authentication/LoginController.login')
   Route.post('/refresh', 'Authentication/LoginController.refreshToken')
   Route.post('/password/forgot', 'Password/PasswordController.forgotPassword')

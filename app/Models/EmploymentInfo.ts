@@ -30,9 +30,6 @@ export default class EmploymentInfo extends BaseModel {
   public workType: string
 
   @column()
-  public statusId: string
-
-  @column()
   public resumptionDate: DateTime
 
   @column()
