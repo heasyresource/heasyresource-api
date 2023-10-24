@@ -39,3 +39,11 @@ Route.group(() => {
   Route.post('/password/verify-code', 'Password/PasswordController.verifyResetPasswordCode')
   Route.put('/password/reset', 'Password/PasswordController.resetPassword')
 }).prefix('/api/v1')
+
+Route.group(() => {
+  Route.get('/departments', 'Department/DepartmentsController.index')
+  Route.get('/departments/:id', 'Department/DepartmentsController.show')
+  Route.post('/departments', 'Department/DepartmentsController.store')
+  Route.put('/departments/:id', 'Department/DepartmentsController.update')
+  Route.delete('/departments/:id', 'Department/DepartmentsController.destroy')
+}).prefix('api/v1')

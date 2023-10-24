@@ -9,6 +9,9 @@ export default class NextOfKin extends BaseModel {
   public id: string
 
   @column()
+  public type: string
+
+  @column()
   public userId: string
 
   @column()

@@ -5,7 +5,7 @@ import Genders from 'App/Enums/Genders'
 export default class extends BaseSchema {
   protected tableName = 'users'
 
-  public async up () {
+  public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
       table.string('first_name').notNullable()
@@ -14,7 +14,13 @@ export default class extends BaseSchema {
       table.string('phone_number').nullable().unique()
       table.enum('gender', [Genders.MALE, Genders.FEMALE])
       table.text('home_address').nullable()
-      table.enum('marital_status', [MaritalStatuses.SINGLE, MaritalStatuses.MARRIED, MaritalStatuses.DIVORCED, MaritalStatuses.WIDOWED, MaritalStatuses.SEPARATED])
+      table.enum('marital_status', [
+        MaritalStatuses.SINGLE,
+        MaritalStatuses.MARRIED,
+        MaritalStatuses.DIVORCED,
+        MaritalStatuses.WIDOWED,
+        MaritalStatuses.SEPARATED,
+      ])
       table.date('date_of_birth').nullable()
       table.string('password').notNullable()
       table.boolean('is_active').notNullable().defaultTo(false)
@@ -28,7 +34,7 @@ export default class extends BaseSchema {
     })
   }
 
-  public async down () {
+  public async down() {
     this.schema.dropTable(this.tableName)
   }
 }

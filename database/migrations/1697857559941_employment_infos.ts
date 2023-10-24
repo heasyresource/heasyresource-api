@@ -1,5 +1,5 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
-import WorkTypes from 'App/Enums/WorkTypes'
+import WorkModes from 'App/Enums/WorkModes'
 
 export default class extends BaseSchema {
   protected tableName = 'employment_infos'
@@ -13,7 +13,7 @@ export default class extends BaseSchema {
       table.uuid('department_id').nullable()
       table.string('position').nullable()
       table.string('salary').nullable()
-      table.enum('work_type', [WorkTypes.HYBRID, WorkTypes.ONSITE, WorkTypes.REMOTE])
+      table.enum('work_type', [WorkModes.HYBRID, WorkModes.ONSITE, WorkModes.REMOTE])
       table.dateTime('resumption_date').nullable()
       table.dateTime('termination_date').nullable()
       table.timestamps(true, true)
