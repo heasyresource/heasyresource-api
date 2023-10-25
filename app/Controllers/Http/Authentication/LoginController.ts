@@ -16,7 +16,7 @@ export default class LoginController {
       return response.unauthorized({
         status: 'Unauthorized',
         message: 'Invalid credentials.',
-        statusCode: 400,
+        statusCode: 401,
       })
     }
 
@@ -24,11 +24,11 @@ export default class LoginController {
       return response.unauthorized({
         status: 'Unauthorized',
         message: 'Invalid credentials.',
-        statusCode: 400,
+        statusCode: 401,
       })
     }
 
-    if (user.isVerified == false) {
+    if (!user.isVerified) {
       return response.unauthorized({
         status: 'Unauthorized',
         message: 'Your account have not been verified, please verify your account.',
@@ -36,7 +36,7 @@ export default class LoginController {
       })
     }
 
-    if (user.isActive == false) {
+    if (!user.isActive) {
       return response.unauthorized({
         status: 'Unauthorized',
         message: 'Your account have been deactivated, please contact the admin.',
