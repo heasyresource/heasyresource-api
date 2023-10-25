@@ -24,12 +24,13 @@ Route.get('/', async () => {
   return { welcome: 'Heasyresource API' }
 })
 
-Route.on('/email').render('emails/welcome')
+// Route.on('/email').render('emails/welcome')
 
 Route.group(() => {
   Route.get('/', async () => {
     return { welcome: 'Heasyresource API' }
   })
+  Route.post('/validate/company-info', 'Registration/RegistrationController.validateCompanyInfo')
   Route.post('/register', 'Registration/RegistrationController.register')
   Route.post('/account/verify', 'Verification/VerificationController.verifyAccount')
   Route.post('/account/resend-code', 'Verification/VerificationController.resendVerificationCode')

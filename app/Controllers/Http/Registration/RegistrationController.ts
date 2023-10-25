@@ -6,6 +6,7 @@ import Company from 'App/Models/Company'
 import EmploymentInfo from 'App/Models/EmploymentInfo'
 import Role from 'App/Models/Role'
 import User from 'App/Models/User'
+import CompanyInfoValidator from 'App/Validators/CompanyInfoValidator'
 import RegistrationValidator from 'App/Validators/RegistrationValidator'
 import randomstring from 'randomstring'
 
@@ -82,6 +83,16 @@ export default class RegistrationController {
       status: 'Created',
       message: 'Registered successfully.',
       statusCode: 201,
+    })
+  }
+
+  public async validateCompanyInfo({ request, response }: HttpContextContract) {
+    await request.validate(CompanyInfoValidator)
+
+    return response.ok({
+      status: 'Success',
+      message: 'Validated successfully.',
+      statusCode: 200,
     })
   }
 }
