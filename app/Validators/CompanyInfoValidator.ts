@@ -1,7 +1,7 @@
 import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class RegistrationValidator {
+export default class CompanyInfoValidator {
   constructor(protected ctx: HttpContextContract) {}
   public schema = schema.create({
     companyName: schema.string({ trim: true }, [
@@ -16,35 +16,13 @@ export default class RegistrationValidator {
       rules.unique({ table: 'companies', column: 'website' }),
     ]),
     industryId: schema.string({ trim: true }, [rules.uuid()]),
-    position: schema.string({ trim: true }, [
-      rules.alpha({
-        allow: ['space', 'dash'],
-      }),
-    ]),
     companyPhoneNumber: schema.string([
       rules.mobile({
         strict: true,
         locale: ['en-NG'],
       }),
       rules.unique({ table: 'companies', column: 'phone_number' }),
-    ]),
-    firstName: schema.string({ trim: true }, [
-      rules.alpha({
-        allow: ['space', 'dash'],
-      }),
-    ]),
-    lastName: schema.string({ trim: true }, [
-      rules.alpha({
-        allow: ['space', 'dash'],
-      }),
-    ]),
-    email: schema.string({ trim: true }, [
-      rules.email(),
-      rules.unique({ table: 'users', column: 'email' }),
-    ]),
-    password: schema.string([
-      rules.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/),
-    ]),
+    ])
   })
 
   public messages: CustomMessages = {
@@ -60,19 +38,7 @@ export default class RegistrationValidator {
     'industryId.uuid': 'Please select a valid field/industry.',
     'companyPhoneNumber.required': 'Phone number is required.',
     'companyPhoneNumber.mobile':
-    'Phone number must be a valid phone number and it must prefixed with country code.',
+      'Phone number must be a valid phone number and it must prefixed with country code.',
     'companyPhoneNumber.unique': 'This phone number already exist.',
-    'position.required': 'Position is required.',
-    'position.alpha': 'Position should only contain alphabets.',
-    'firstName.required': 'First name is required.',
-    'firstName.alpha': 'First name should only contain alphabets.',
-    'lastName.required': 'Last name is required.',
-    'lastName.alpha': 'Last name should only contain alphabets.',
-    'email.required': 'Email address is required.',
-    'email.email': 'Email address must be a valid email address.',
-    'email.unique': 'This email address already exist.',
-    'password.required': 'Password is required.',
-    'password.regex':
-      'Password must be at least 8 characters long and contain at least one letter, one digit, and one special character.',
   }
 }
