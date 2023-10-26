@@ -1,7 +1,7 @@
-enum WorkTypes {
+enum WorkModes {
   ONSITE = 'On-Site',
   HYBRID = 'Hybrid',
   REMOTE = 'Remote',
 }
 
-export default WorkTypes
+export default WorkModes

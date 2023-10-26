@@ -21,10 +21,19 @@ export default class Company extends BaseModel {
   public phoneNumber: string
 
   @column()
+  public subdomain: string
+
+  @column()
+  public email_domain: string
+
+  @column()
   public address: string
 
   @column()
   public logoUrl: string
+
+  @column()
+  public size: string
 
   @column()
   public industryId: string

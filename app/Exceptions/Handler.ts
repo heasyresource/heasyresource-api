@@ -42,7 +42,7 @@ export default class ExceptionHandler extends HttpExceptionHandler {
       return ctx.response.unauthorized({ status: 'Unauthorized', statusCode: 401, message: 'Session Timeout. Please login again.' })
     }
 
-    if (error.code === 'E_ROUTE_NOT_FOUND') {
+    if (error.code === 'E_ROUTE_NOT_FOUND' || error.code === 'E_ROW_NOT_FOUND') {
       return ctx.response.notFound({ status: 'Not Found', statusCode: 404, message: 'Resource Not Found.' })
     }
 

@@ -9,6 +9,11 @@ export default class RegistrationValidator {
     ]),
     companyEmail: schema.string({ trim: true }, [
       rules.email(),
+      rules.normalizeEmail({
+        allLowercase: true,
+        gmailRemoveDots: true,
+        gmailRemoveSubaddress: true,
+      }),  
       rules.unique({ table: 'companies', column: 'email' }),
     ]),
     companyWebsite: schema.string({ trim: true }, [
@@ -40,6 +45,11 @@ export default class RegistrationValidator {
     ]),
     email: schema.string({ trim: true }, [
       rules.email(),
+      rules.normalizeEmail({
+        allLowercase: true,
+        gmailRemoveDots: true,
+        gmailRemoveSubaddress: true,
+      }),  
       rules.unique({ table: 'users', column: 'email' }),
     ]),
     password: schema.string([
