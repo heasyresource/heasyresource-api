@@ -38,12 +38,12 @@ Route.group(() => {
   Route.post('/password/forgot', 'Password/PasswordController.forgotPassword')
   Route.post('/password/verify-code', 'Password/PasswordController.verifyResetPasswordCode')
   Route.put('/password/reset', 'Password/PasswordController.resetPassword')
-}).prefix('/api/v1')
 
-Route.group(() => {
-  Route.get('/departments', 'Department/DepartmentsController.index')
-  Route.get('/departments/:id', 'Department/DepartmentsController.show')
-  Route.post('/departments', 'Department/DepartmentsController.store')
-  Route.put('/departments/:id', 'Department/DepartmentsController.update')
-  Route.delete('/departments/:id', 'Department/DepartmentsController.destroy')
-}).prefix('api/v1')
+  // DEPARTMENTS ROUTES
+  Route.group(() => {
+    Route.get('/departments', 'Department/DepartmentsController.fetchAllDepartment')
+    Route.post('/departments', 'Department/DepartmentsController.createDepartment')
+    Route.put('/departments/:id', 'Department/DepartmentsController.updateDepartment')
+    Route.delete('/departments/:id', 'Department/DepartmentsController.deleteDepartment')
+  }).middleware(['auth:jwt', 'subdomain'])
+}).prefix('/api/v1')

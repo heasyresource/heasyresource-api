@@ -26,7 +26,7 @@ export default class PasswordController {
         statusCode: 400,
       })
     }
-    if (user.isVerified == false) {
+    if (!user.isVerified) {
       return response.unauthorized({
         status: 'Unauthorized',
         message: 'Your account have not been verified, please verify your account.',
@@ -34,7 +34,7 @@ export default class PasswordController {
       })
     }
 
-    if (user.isActive == false) {
+    if (!user.isActive) {
       return response.unauthorized({
         status: 'Unauthorized',
         message: 'Your account have been deactivated, please contact the admin.',

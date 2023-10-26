@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.uuid('id').primary()
       table.string('name').notNullable()
       table.string('code', 4).notNullable()
+      table.uuid('company_id').notNullable()
       table.boolean('is_deleted').notNullable().defaultTo(false)
       table.timestamps(true, true)
     })
