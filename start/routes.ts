@@ -47,4 +47,9 @@ Route.group(() => {
     Route.put('/departments/:id', 'Department/DepartmentsController.updateDepartment')
     Route.delete('/departments/:id', 'Department/DepartmentsController.deleteDepartment')
   }).middleware(['auth:jwt', 'subdomain'])
+
+  // METADATA ROUTE
+  Route.group(() => {
+    Route.get('/metadata', 'MetaData/MetaDataController.metadata')
+  }).middleware(['auth:jwt', 'subdomain'])
 }).prefix('/api/v1')
