@@ -17,7 +17,10 @@ export default class PasswordController {
 
     const { email } = validatedBody
 
-    const user = await User.findBy('email', email)
+    const user = await User.query()
+      .where('email', email)
+      .where('companyId', request.tenant.id)
+      .first()
 
     if (!user) {
       return response.badRequest({
@@ -86,6 +89,7 @@ export default class PasswordController {
     const user = await User.query()
       .where('email', email)
       .where('verificationCode', resetPasswordCode)
+      .where('companyId', request.tenant.id)
       .first()
 
     if (!user) {
@@ -96,11 +100,28 @@ export default class PasswordController {
       })
     }
 
-    return response.ok({
-      status: 'Success',
-      message: 'Reset password code is valid.',
-      statusCode: 200,
-    })
+    const currentTime = new Date().getTime()
+    const verificationCodeSendTime = user.verificationCodeSentAt
+      ? user.verificationCodeSentAt.toMillis()
+      : 0
+    const timeDifference = currentTime - verificationCodeSendTime
+
+    if (timeDifference <= verificationCodeValidity) {
+      return response.ok({
+        status: 'Success',
+        message: 'Reset password code is valid.',
+        statusCode: 200,
+      })
+    } else {
+      user.verificationCode = null
+      await user.save()
+
+      return response.badRequest({
+        status: 'Bad Request',
+        message: 'Reset password code expired.',
+        statusCode: 400,
+      })
+    }
   }
 
   public async resetPassword({ response, request }: HttpContextContract) {
@@ -111,6 +132,7 @@ export default class PasswordController {
     const user = await User.query()
       .where('email', email)
       .where('verificationCode', resetPasswordCode)
+      .where('companyId', request.tenant.id)
       .first()
 
     if (!user) {

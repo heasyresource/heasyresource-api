@@ -10,7 +10,7 @@ export default class LoginController {
     
     const { email, password } = validatedBody
 
-    const user = await User.query().where('email', email).preload('role').first()
+    const user = await User.query().where('email', email).preload('role').preload('company').first()
 
     if (!user) {
       return response.unauthorized({

@@ -39,7 +39,10 @@ export default class VerificationController {
       await user.save()
 
       const token = await auth.use('jwt').generate(user)
-      await user.load('role')
+      await user.load((loader) => {
+        loader.load('role').load('company')
+      })
+      // await user.load('role')
 
       return response.ok({
         status: 'Success',
@@ -64,7 +67,7 @@ export default class VerificationController {
     
     const { email } = validatedBody
 
-    const user = await User.findBy('email', email)
+    const user = await User.query().where('email', email).where('companyId', request.tenant.id).first()
 
     if (!user) {
       return response.badRequest({

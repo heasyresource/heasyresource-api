@@ -6,10 +6,10 @@ export default class Subdomain {
     const subdomain = request.header('x-subdomain-name')
 
     if (!subdomain) {
-      return response.badRequest({
-        status: 'Bad Request',
-        message: 'x-subdomain-name header is missing.',
-        statusCode: 400,
+      return response.forbidden({
+        status: 'Forbidden',
+        message: 'Header is missing.',
+        statusCode: 403,
       })
     }
 
