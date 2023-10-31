@@ -14,7 +14,7 @@ export default class MetaDataController {
     const industries = await Industry.all()
 
     return response.ok({
-      status: 'success',
+      status: 'Success',
       message: 'Fetched MetaData successfully',
       statusCode: 200,
       results: {

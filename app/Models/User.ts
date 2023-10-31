@@ -1,8 +1,19 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, beforeCreate, beforeSave, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  ModelQueryBuilderContract,
+  beforeCreate,
+  beforeFetch,
+  beforeFind,
+  beforeSave,
+  belongsTo,
+  column,
+} from '@ioc:Adonis/Lucid/Orm'
 import Hash from '@ioc:Adonis/Core/Hash'
 import { v4 as uuid } from 'uuid'
 import Role from './Role'
+import Company from './Company'
 
 export default class User extends BaseModel {
   public static selfAssignPrimaryKey = true
@@ -41,7 +52,7 @@ export default class User extends BaseModel {
   public verificationCode: string | null
 
   @column.dateTime({ serializeAs: null })
-  public verificationCodeSentAt: DateTime 
+  public verificationCodeSentAt: DateTime
 
   @column()
   public roleId: string
@@ -72,4 +83,17 @@ export default class User extends BaseModel {
 
   @belongsTo(() => Role)
   public role: BelongsTo<typeof Role>
+
+  @belongsTo(() => Company, {
+    onQuery: (query) => {
+      query.select('name', 'subdomain')
+    },
+  })
+  public company: BelongsTo<typeof Company>
+
+  @beforeFetch()
+  @beforeFind()
+  public static ignoreDeleted(query: ModelQueryBuilderContract<typeof User>) {
+    query.where('isDeleted', false)
+  }
 }

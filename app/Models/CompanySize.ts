@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, beforeCreate } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, beforeCreate, ModelQueryBuilderContract, beforeFetch, beforeFind } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from 'uuid'
 
 export default class CompanySize extends BaseModel {
@@ -14,14 +14,20 @@ export default class CompanySize extends BaseModel {
   @column({ serializeAs: null })
   public isDeleted: boolean
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: null  })
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null  })
   public updatedAt: DateTime
 
   @beforeCreate()
   public static assignUuid(companySize: CompanySize) {
     companySize.id = uuid()
+  }
+
+  @beforeFetch()
+  @beforeFind()
+  public static ignoreDeleted(query: ModelQueryBuilderContract<typeof CompanySize>) {
+    query.where('isDeleted', false)
   }
 }

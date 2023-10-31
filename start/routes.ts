@@ -24,7 +24,7 @@ Route.get('/', async () => {
   return { welcome: 'Heasyresource API' }
 })
 
-// Route.on('/email').render('emails/welcome')
+// Route.on('/email').render('emails/reset_password')
 
 Route.group(() => {
   Route.get('/', async () => {
@@ -32,13 +32,16 @@ Route.group(() => {
   })
   Route.post('/validate/company-info', 'Registration/RegistrationController.validateCompanyInfo')
   Route.post('/register', 'Registration/RegistrationController.register')
-  Route.post('/account/verify', 'Verification/VerificationController.verifyAccount')
-  Route.post('/account/resend-code', 'Verification/VerificationController.resendVerificationCode')
   Route.post('/login', 'Authentication/LoginController.login')
   Route.post('/refresh', 'Authentication/LoginController.refreshToken')
-  Route.post('/password/forgot', 'Password/PasswordController.forgotPassword')
-  Route.post('/password/verify-code', 'Password/PasswordController.verifyResetPasswordCode')
-  Route.put('/password/reset', 'Password/PasswordController.resetPassword')
+  Route.post('/account/verify', 'Verification/VerificationController.verifyAccount')
+
+  Route.group(() => {
+    Route.post('/account/resend-code', 'Verification/VerificationController.resendVerificationCode')
+    Route.post('/password/forgot', 'Password/PasswordController.forgotPassword')
+    Route.post('/password/verify-code', 'Password/PasswordController.verifyResetPasswordCode')
+    Route.put('/password/reset', 'Password/PasswordController.resetPassword')
+}).middleware(['subdomain'])
 
   // DEPARTMENTS ROUTES
   Route.group(() => {
@@ -49,7 +52,5 @@ Route.group(() => {
   }).middleware(['auth:jwt', 'subdomain'])
 
   // METADATA ROUTE
-  Route.group(() => {
-    Route.get('/metadata', 'MetaData/MetaDataController.metadata')
-  }).middleware(['auth:jwt', 'subdomain'])
+  Route.get('/metadata', 'MetaData/MetaDataController.metadata')
 }).prefix('/api/v1')
