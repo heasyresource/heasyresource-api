@@ -7,6 +7,7 @@ import EmploymentInfo from 'App/Models/EmploymentInfo'
 import Role from 'App/Models/Role'
 import User from 'App/Models/User'
 import CompanyInfoValidator from 'App/Validators/CompanyInfoValidator'
+import CompleteCompanyRegistrationValidator from 'App/Validators/CompleteCompanyRegistrationValidator'
 import RegistrationValidator from 'App/Validators/RegistrationValidator'
 import randomstring from 'randomstring'
 
@@ -92,6 +93,50 @@ export default class RegistrationController {
     return response.ok({
       status: 'Success',
       message: 'Validated successfully.',
+      statusCode: 200,
+    })
+  }
+
+  public async completeCompanyRegistration({ auth, request, response }: HttpContextContract) {
+
+    const validatedBody = await request.validate(CompleteCompanyRegistrationValidator)
+
+    const {
+      countryId,
+      address,
+      subdomain,
+      emailDomain,
+      logoUrl,
+      companySizeId,
+      autoGenerateEmployeeId,
+      employeeIdFormat,
+    } = validatedBody
+
+    const user = await auth.use('jwt').authenticate()
+
+    const company = await Company.query().where('id', user.companyId).where('isDeleted', false).first();
+
+    if (!company) {
+      return response.badRequest({
+        status: 'Bad Request',
+        message: 'Registration failed, please try again later.',
+        statusCode: 400,
+      })
+    }
+
+    company.countryId = countryId
+    company.address = address
+    company.subdomain = subdomain
+    company.emailDomain = emailDomain
+    company.logoUrl = logoUrl
+    company.companySizeId = companySizeId
+    company.autoGenerateEmployeeId = autoGenerateEmployeeId
+    company.employeeIdFormat = JSON.stringify(employeeIdFormat)
+    await company.save()
+
+    return response.ok({
+      status: 'Success',
+      message: 'Submit company information successfully.',
       statusCode: 200,
     })
   }

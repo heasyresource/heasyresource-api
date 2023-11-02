@@ -13,14 +13,23 @@ export default class RegistrationValidator {
         allLowercase: true,
         gmailRemoveDots: true,
         gmailRemoveSubaddress: true,
-      }),  
+      }),
       rules.unique({ table: 'companies', column: 'email' }),
     ]),
     companyWebsite: schema.string({ trim: true }, [
       rules.url(),
       rules.unique({ table: 'companies', column: 'website' }),
     ]),
-    industryId: schema.string({ trim: true }, [rules.uuid()]),
+    industryId: schema.string({ trim: true }, [
+      rules.uuid(),
+      rules.exists({
+        table: 'industries',
+        column: 'id',
+        where: {
+          is_deleted: false,
+        },
+      }),
+    ]),
     position: schema.string({ trim: true }, [
       rules.alpha({
         allow: ['space', 'dash'],
@@ -49,7 +58,7 @@ export default class RegistrationValidator {
         allLowercase: true,
         gmailRemoveDots: true,
         gmailRemoveSubaddress: true,
-      }),  
+      }),
       rules.unique({ table: 'users', column: 'email' }),
     ]),
     password: schema.string([
@@ -59,7 +68,7 @@ export default class RegistrationValidator {
 
   public messages: CustomMessages = {
     'companyName.required': 'Company name is required.',
-    'companyName.unique': 'Company name address already exist.',
+    'companyName.unique': 'Company name already exist.',
     'companyEmail.required': 'Company email address is required.',
     'companyEmail.email': 'Company email address must be a valid email address.',
     'companyEmail.unique': 'Company email address already exist.',
@@ -68,9 +77,10 @@ export default class RegistrationValidator {
     'companyWebsite.url': 'Company website must be a valid url.',
     'industryId.required': 'Please select a valid field/industry.',
     'industryId.uuid': 'Please select a valid field/industry.',
+    'industryId.exists': 'Please select a valid field/industry.',
     'companyPhoneNumber.required': 'Phone number is required.',
     'companyPhoneNumber.mobile':
-    'Phone number must be a valid phone number and it must prefixed with country code.',
+      'Phone number must be a valid phone number and it must prefixed with country code.',
     'companyPhoneNumber.unique': 'This phone number already exist.',
     'position.required': 'Position is required.',
     'position.alpha': 'Position should only contain alphabets.',

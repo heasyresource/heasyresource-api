@@ -25,6 +25,9 @@ export default class User extends BaseModel {
   public firstName: string
 
   @column()
+  public middleName: string
+
+  @column()
   public lastName: string
 
   @column()
@@ -44,6 +47,9 @@ export default class User extends BaseModel {
 
   @column()
   public isActive: boolean
+
+  @column()
+  public isDefaultPassword: boolean
 
   @column()
   public isVerified: boolean

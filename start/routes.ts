@@ -36,6 +36,10 @@ Route.group(() => {
   Route.post('/refresh', 'Authentication/LoginController.refreshToken')
   Route.post('/account/verify', 'Verification/VerificationController.verifyAccount')
 
+    Route.group(() => {
+      Route.post('/complete-registration', 'Registration/RegistrationController.completeCompanyRegistration')
+    }).middleware(['auth:jwt'])
+
   Route.group(() => {
     Route.post('/account/resend-code', 'Verification/VerificationController.resendVerificationCode')
     Route.post('/password/forgot', 'Password/PasswordController.forgotPassword')

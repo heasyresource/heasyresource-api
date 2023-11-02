@@ -24,7 +24,7 @@ export default class Company extends BaseModel {
   public subdomain: string
 
   @column()
-  public email_domain: string
+  public emailDomain: string | undefined
 
   @column()
   public address: string
@@ -33,10 +33,22 @@ export default class Company extends BaseModel {
   public logoUrl: string
 
   @column()
-  public size: string
+  public companySizeId: string
+
+  @column()
+  public countryId: string
 
   @column()
   public industryId: string
+
+  @column()
+  public autoGenerateEmployeeId: boolean
+
+  @column()
+  public employeeIdFormat: string[] | string
+  
+  @column()
+  public isCompletedRegistration: boolean
 
   @column()
   public isActive: boolean
