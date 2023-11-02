@@ -53,6 +53,8 @@ Route.group(() => {
     Route.post('/departments', 'Department/DepartmentsController.createDepartment')
     Route.put('/departments/:id', 'Department/DepartmentsController.updateDepartment')
     Route.delete('/departments/:id', 'Department/DepartmentsController.deleteDepartment')
+    Route.post('/departments/multiple', 'Department/DepartmentsController.createMultipleDepartment')
+
   }).middleware(['auth:jwt', 'subdomain'])
 
   // METADATA ROUTE
