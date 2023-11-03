@@ -41,7 +41,7 @@ Route.group(() => {
     Route.post('/password/forgot', 'Password/PasswordController.forgotPassword')
     Route.post('/password/verify-code', 'Password/PasswordController.verifyResetPasswordCode')
     Route.put('/password/reset', 'Password/PasswordController.resetPassword')
-}).middleware(['subdomain'])
+  }).middleware(['subdomain'])
 
   // DEPARTMENTS ROUTES
   Route.group(() => {
@@ -53,4 +53,20 @@ Route.group(() => {
 
   // METADATA ROUTE
   Route.get('/metadata', 'MetaData/MetaDataController.metadata')
+
+  // HOLIDAY ROUTES
+  Route.group(() => {
+    Route.get('/holidays', 'Holiday/HolidayTypesController.fetchAllHoliday')
+    Route.post('/holidays', 'Holiday/HolidayTypesController.createHoliday')
+    Route.put('/holidays/:id', 'Holiday/HolidayTypesController.updateHoliday')
+    Route.delete('/holidays/:id', 'Holiday/HolidayTypesController.deleteHoliday')
+  }).middleware(['auth:jwt', 'subdomain'])
+
+  // LEAVE ROUTES
+  Route.group(() => {
+    Route.get('/leave', 'Leave/LeaveTypesController.fetchAllLeaveTypes')
+    Route.post('/leave', 'Leave/LeaveTypesController.createLeaveType')
+    Route.put('/leave/:id', 'Leave/LeaveTypesController.updateLeaveType')
+    Route.delete('/leave/:id', 'Leave/LeaveTypesController.deleteLeaveType')
+  }).middleware(['auth:jwt', 'subdomain'])
 }).prefix('/api/v1')

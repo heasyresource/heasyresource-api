@@ -17,7 +17,7 @@ export default class State extends BaseModel {
   @column({ serializeAs: null })
   public isDeleted: boolean
 
-  @column.dateTime({ autoCreate: true, serializeAs: null  })
+  @column.dateTime({ autoCreate: true, serializeAs: null })
   public createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })

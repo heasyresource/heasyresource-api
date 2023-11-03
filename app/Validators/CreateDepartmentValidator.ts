@@ -4,8 +4,8 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 export default class CreateDepartmentValidator {
   constructor(protected ctx: HttpContextContract) {}
   public refs = schema.refs({
-		id: this.ctx.params.id
-	})
+    id: this.ctx.params.id,
+  })
 
   public schema = schema.create({
     name: schema.string({ trim: true }, [
@@ -15,7 +15,7 @@ export default class CreateDepartmentValidator {
         where: {
           company_id: this.ctx.request.tenant.id,
         },
-        whereNot: { id: this.refs.id }
+        whereNot: { id: this.refs.id },
       }),
       rules.alphaNum({
         allow: ['space', 'dash'],
@@ -28,7 +28,7 @@ export default class CreateDepartmentValidator {
         where: {
           company_id: this.ctx.request.tenant.id,
         },
-        whereNot: { id: this.refs.id }
+        whereNot: { id: this.refs.id },
       }),
       rules.alphaNum(),
       rules.maxLength(4),

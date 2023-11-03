@@ -4,12 +4,12 @@ import {
   column,
   beforeCreate,
   beforeFetch,
-  ModelQueryBuilderContract,
   beforeFind,
+  ModelQueryBuilderContract,
 } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from 'uuid'
 
-export default class Department extends BaseModel {
+export default class LeaveType extends BaseModel {
   public static selfAssignPrimaryKey = true
 
   @column({ isPrimary: true })
@@ -19,28 +19,34 @@ export default class Department extends BaseModel {
   public name: string
 
   @column()
-  public code: string
+  public isPaid: boolean
 
-  @column({ serializeAs: null })
+  @column()
   public companyId: string
+
+  @column()
+  public comments: string
+
+  @column()
+  public availability: string
 
   @column({ serializeAs: null })
   public isDeleted: boolean
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: null })
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
 
   @beforeCreate()
-  public static assignUuid(department: Department) {
-    department.id = uuid()
+  public static assignUuid(leaveType: LeaveType) {
+    leaveType.id = uuid()
   }
 
   @beforeFetch()
   @beforeFind()
-  public static ignoreDeleted(query: ModelQueryBuilderContract<typeof Department>) {
+  public static ignoreDeleted(query: ModelQueryBuilderContract<typeof LeaveType>) {
     query.where('isDeleted', false)
   }
 }
