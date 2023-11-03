@@ -4,8 +4,8 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 export default class CreateDepartmentValidator {
   constructor(protected ctx: HttpContextContract) {}
   public refs = schema.refs({
-    id: this.ctx.params.id,
-  })
+		id: this.ctx.params.id || null
+	})
 
   public schema = schema.create({
     name: schema.string({ trim: true }, [

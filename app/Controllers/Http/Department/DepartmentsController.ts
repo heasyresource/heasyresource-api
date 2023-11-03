@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Department from 'App/Models/Department'
 import CreateDepartmentValidator from 'App/Validators/CreateDepartmentValidator'
+import CreateMultipleDepartmentValidator from 'App/Validators/CreateMultipleDepartmentValidator'
 
 export default class DepartmentsController {
   public async fetchAllDepartment({ request, response }: HttpContextContract) {
@@ -20,6 +21,22 @@ export default class DepartmentsController {
     const { code, name } = validatedBody
 
     await Department.firstOrCreate({ code, name, companyId: request.tenant.id })
+
+    return response.created({
+      status: 'Created',
+      message: 'Created department successfully.',
+      statusCode: 201,
+    })
+  }
+
+  public async createMultipleDepartment({ request, response }: HttpContextContract) {
+    const validatedBody = await request.validate(CreateMultipleDepartmentValidator)
+
+    const { departments } = validatedBody
+
+    departments.forEach(async (department) => {
+      await Department.firstOrCreate({ ...department, companyId: request.tenant.id })
+    })
 
     return response.created({
       status: 'Created',
