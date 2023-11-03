@@ -85,15 +85,9 @@ export default class CreateHolidayTypeValidator {
     'name.unique': 'Holiday name already exist.',
     'date.required': 'Holiday date is required.',
     'date.unique': 'Holiday date already exist.',
-    'availability.required': 'Holiday availability is required.',
     'availability.alphaNum': 'Holiday availability should only contain alphanumeric characters.',
-    'availability.unique': 'Holiday availability already exist.',
-    'comments.required': 'Holiday comments is required.',
     'comments.alphaNum': 'Holiday comments should only contain alphanumeric characters.',
-    'comments.unique': 'Holiday comments already exist.',
-    'isPaid.required': 'Holiday isPaid status is required.',
-    'isPaid.unique': 'Holiday isPaid status already exist.',
-    'isFullDay.required': 'Holiday isFullday status is required.',
-    'isFullDay.unique': 'Holiday isFullDay status already exist.',
+    'isPaid.required': 'Holiday isPaid status is required and must be true or false.',
+    'isFullDay.required': 'Holiday isFullDay status is required and must be true or false.',
   }
 }

@@ -63,12 +63,8 @@ export default class CreateLeaveTypeValidator {
     'name.required': 'Leave name is required.',
     'name.alphaNum': 'Leave name should only contain alphanumeric characters.',
     'name.unique': 'Leave name already exist.',
-    'isPaid.required': 'isPaid is required.',
-    'comments.required': 'Comments is required.',
+    'isPaid.required': 'isPaid is required and must be true or false.',
     'comments.alphaNum': 'Comments should only contain alphanumeric characters.',
-    'comments.unique': 'Comments already exist.',
-    'availability.required': 'Availability is required.',
     'availability.alphaNum': 'Availability should only contain alphanumeric characters.',
-    'availability.unique': 'Availability already exist.',
   }
 }
