@@ -5,7 +5,7 @@ import CreateLeaveTypeValidator from 'App/Validators/CreateLeaveTypeValidator'
 export default class LeaveTypesController {
   public async fetchAllLeaveTypes({ request, response }: HttpContextContract) {
     const leaveTypes = await LeaveType.query()
-      // .where('companyId', request.tenant.id)
+      .where('companyId', request.tenant.id)
       .where('isPaid', 0)
 
     return response.ok({
