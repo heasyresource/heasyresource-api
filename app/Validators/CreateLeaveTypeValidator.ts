@@ -21,11 +21,54 @@ export default class CreateLeaveTypeValidator {
         allow: ['space', 'dash'],
       }),
     ]),
+    isPaid: schema.boolean([
+      rules.unique({
+        table: 'leave_types',
+        column: 'isPaid',
+        where: {
+          company_id: this.ctx.request.tenant.id,
+        },
+        whereNot: { id: this.refs.id },
+      }),
+    ]),
+    comments: schema.string({ trim: true }, [
+      rules.unique({
+        table: 'leave_types',
+        column: 'comments',
+        where: {
+          company_id: this.ctx.request.tenant.id,
+        },
+        whereNot: { id: this.refs.id },
+      }),
+      rules.alphaNum({
+        allow: ['space', 'dash'],
+      }),
+    ]),
+    availability: schema.string({ trim: true }, [
+      rules.unique({
+        table: 'leave_types',
+        column: 'availability',
+        where: {
+          company_id: this.ctx.request.tenant.id,
+        },
+        whereNot: { id: this.refs.id },
+      }),
+      rules.alphaNum({
+        allow: ['space', 'dash'],
+      }),
+    ]),
   })
 
   public messages: CustomMessages = {
     'name.required': 'Leave name is required.',
     'name.alphaNum': 'Leave name should only contain alphanumeric characters.',
     'name.unique': 'Leave name already exist.',
+    'isPaid.required': 'isPaid is required.',
+    'comments.required': 'Comments is required.',
+    'comments.alphaNum': 'Comments should only contain alphanumeric characters.',
+    'comments.unique': 'Comments already exist.',
+    'availability.required': 'Availability is required.',
+    'availability.alphaNum': 'Availability should only contain alphanumeric characters.',
+    'availability.unique': 'Availability already exist.',
   }
 }

@@ -19,9 +19,15 @@ export default class LeaveTypesController {
   public async createLeaveType({ request, response }: HttpContextContract) {
     const validatedBody = await request.validate(CreateLeaveTypeValidator)
 
-    const { name } = validatedBody
+    const { name, isPaid, comments, availability } = validatedBody
 
-    await LeaveType.firstOrCreate({ name, companyId: request.tenant.id })
+    await LeaveType.firstOrCreate({
+      name,
+      availability,
+      comments,
+      isPaid,
+      companyId: request.tenant.id,
+    })
 
     return response.created({
       status: 'Created',

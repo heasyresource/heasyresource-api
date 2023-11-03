@@ -17,9 +17,17 @@ export default class HolidayTypesController {
   public async createHoliday({ request, response }: HttpContextContract) {
     const validatedBody = await request.validate(CreateHolidayTypeValidator)
 
-    const { name } = validatedBody
+    const { name, date, availability, comments, isPaid, isFullDay } = validatedBody
 
-    await HolidayType.firstOrCreate({ name, companyId: request.tenant.id })
+    await HolidayType.firstOrCreate({
+      name,
+      date,
+      availability,
+      comments,
+      isPaid,
+      isFullDay,
+      companyId: request.tenant.id,
+    })
 
     return response.created({
       status: 'Created',
