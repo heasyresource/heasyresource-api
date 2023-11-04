@@ -15,7 +15,7 @@ export default class CreateDepartmentValidator {
         where: {
           company_id: this.ctx.request.tenant.id,
         },
-        whereNot: { id: this.refs.id }
+        whereNot: { id: this.refs.id },
       }),
       rules.alphaNum({
         allow: ['space', 'dash'],
@@ -28,7 +28,7 @@ export default class CreateDepartmentValidator {
         where: {
           company_id: this.ctx.request.tenant.id,
         },
-        whereNot: { id: this.refs.id }
+        whereNot: { id: this.refs.id },
       }),
       rules.alphaNum(),
       rules.maxLength(4),
