@@ -57,6 +57,11 @@ Route.group(() => {
 
   }).middleware(['auth:jwt', 'subdomain'])
 
+    // EMPLOYEE ROUTES
+    Route.group(() => {
+      Route.post('/employees', 'Employee/EmployeesController.addEmployee')
+    }).middleware(['auth:jwt', 'subdomain'])
+
   // METADATA ROUTE
   Route.get('/metadata', 'MetaData/MetaDataController.metadata')
 }).prefix('/api/v1')

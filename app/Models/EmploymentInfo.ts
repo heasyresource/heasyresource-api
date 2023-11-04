@@ -9,7 +9,7 @@ export default class EmploymentInfo extends BaseModel {
   public id: string
 
   @column()
-  public employeeId: string
+  public employeeId: string | undefined
 
   @column()
   public userId: string
@@ -30,10 +30,10 @@ export default class EmploymentInfo extends BaseModel {
   public workType: string
 
   @column()
-  public resumptionDate: DateTime
+  public resumptionDate: Date
 
   @column()
-  public terminationDate: DateTime
+  public terminationDate: Date
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
