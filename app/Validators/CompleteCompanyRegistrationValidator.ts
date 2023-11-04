@@ -41,7 +41,9 @@ export default class CompleteCompanyRegistrationValidator {
       }),
     ]),
     autoGenerateEmployeeId: schema.boolean(),
-    employeeIdFormat: schema.array().members(
+    employeeIdFormat: schema.array.optional([
+      rules.requiredWhen('autoGenerateEmployeeId', '=', true)
+    ]).members(
       schema.string({ trim: true }, [
         rules.alpha({
           allow: ['space'],

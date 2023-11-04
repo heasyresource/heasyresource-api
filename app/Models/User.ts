@@ -25,13 +25,16 @@ export default class User extends BaseModel {
   public firstName: string
 
   @column()
-  public middleName: string
+  public middleName: string | undefined
 
   @column()
   public lastName: string
 
   @column()
   public email: string
+
+  @column()
+  public gender: string
 
   @column()
   public phoneNumber: string
