@@ -19,7 +19,7 @@ export default class HolidayType extends BaseModel {
   public name: string
 
   @column()
-  public date: Date
+  public date: string 
 
   @column({ serializeAs: null })
   public companyId: string

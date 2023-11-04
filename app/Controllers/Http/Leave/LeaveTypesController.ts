@@ -6,7 +6,6 @@ export default class LeaveTypesController {
   public async fetchAllLeaveTypes({ request, response }: HttpContextContract) {
     const leaveTypes = await LeaveType.query()
       .where('companyId', request.tenant.id)
-      .where('isPaid', 0)
 
     return response.ok({
       status: 'Success',
@@ -21,13 +20,16 @@ export default class LeaveTypesController {
 
     const { name, isPaid, comments, availability } = validatedBody
 
-    await LeaveType.firstOrCreate({
-      name,
-      availability,
-      comments,
-      isPaid,
-      companyId: request.tenant.id,
-    })
+    await LeaveType.firstOrCreate(
+      { name, companyId: request.tenant.id },
+      {
+        name,
+        availability,
+        comments,
+        isPaid,
+        companyId: request.tenant.id,
+      }
+    )
 
     return response.created({
       status: 'Created',
@@ -62,7 +64,7 @@ export default class LeaveTypesController {
     await leaveType.merge({ isDeleted: true }).save()
     return response.ok({
       status: 'Success',
-      message: 'Deleted Leave successfully. ',
+      message: 'Deleted Leave successfully.',
       statusCode: 200,
     })
   }

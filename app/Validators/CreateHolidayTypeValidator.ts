@@ -21,62 +21,22 @@ export default class CreateHolidayTypeValidator {
         allow: ['space', 'dash'],
       }),
     ]),
-    date: schema.date({ format: Date }, [
-      rules.unique({
-        table: 'holiday_types',
-        column: 'date',
-        where: {
-          company_id: this.ctx.request.tenant.id,
-        },
-        whereNot: { id: this.refs.id },
-      }),
-    ]),
-    availability: schema.string({ trim: true }, [
-      rules.unique({
-        table: 'holiday_types',
-        column: 'availability',
-        where: {
-          company_id: this.ctx.request.tenant.id,
-        },
-        whereNot: { id: this.refs.id },
-      }),
-      rules.alphaNum({
-        allow: ['space', 'dash'],
-      }),
-    ]),
-    comments: schema.string({ trim: true }, [
-      rules.unique({
-        table: 'holiday_types',
-        column: 'comments',
-        where: {
-          company_id: this.ctx.request.tenant.id,
-        },
-        whereNot: { id: this.refs.id },
-      }),
-      rules.alphaNum({
-        allow: ['space', 'dash'],
-      }),
-    ]),
-    isPaid: schema.boolean([
-      rules.unique({
-        table: 'holiday_types',
-        column: 'isPaid',
-        where: {
-          company_id: this.ctx.request.tenant.id,
-        },
-        whereNot: { id: this.refs.id },
-      }),
-    ]),
-    isFullDay: schema.boolean([
-      rules.unique({
-        table: 'leave_types',
-        column: 'isFullDay',
-        where: {
-          company_id: this.ctx.request.tenant.id,
-        },
-        whereNot: { id: this.refs.id },
-      }),
-    ]),
+    date: schema.string({},
+      [
+        rules.unique({
+          table: 'holiday_types',
+          column: 'date',
+          where: {
+            company_id: this.ctx.request.tenant.id,
+          },
+          whereNot: { id: this.refs.id },
+        }),
+      ]
+    ),
+    availability: schema.string({ trim: true }),
+    comments: schema.string.optional({ trim: true }),
+    isPaid: schema.boolean(),
+    isFullDay: schema.boolean(),
   })
 
   public messages: CustomMessages = {
@@ -85,9 +45,11 @@ export default class CreateHolidayTypeValidator {
     'name.unique': 'Holiday name already exist.',
     'date.required': 'Holiday date is required.',
     'date.unique': 'Holiday date already exist.',
-    'availability.alphaNum': 'Holiday availability should only contain alphanumeric characters.',
+    'availability.required': 'Holiday availability is required.',
     'comments.alphaNum': 'Holiday comments should only contain alphanumeric characters.',
-    'isPaid.required': 'Holiday isPaid status is required and must be true or false.',
-    'isFullDay.required': 'Holiday isFullDay status is required and must be true or false.',
+    'isPaid.required': 'Select either paid or unpaid.',
+    'isPaid.boolean': 'Select either paid or unpaid.',
+    'isFullDay.required': 'Select either full day or half day.',
+    'isFullDay.boolean': 'Select either full day or half day.',
   }
 }

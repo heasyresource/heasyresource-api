@@ -19,15 +19,18 @@ export default class HolidayTypesController {
 
     const { name, date, availability, comments, isPaid, isFullDay } = validatedBody
 
-    await HolidayType.firstOrCreate({
-      name,
-      date,
-      availability,
-      comments,
-      isPaid,
-      isFullDay,
-      companyId: request.tenant.id,
-    })
+    await HolidayType.firstOrCreate(
+      { name, date, companyId: request.tenant.id },
+      {
+        name,
+        date,
+        availability,
+        comments,
+        isPaid,
+        isFullDay,
+        companyId: request.tenant.id,
+      }
+    )
 
     return response.created({
       status: 'Created',

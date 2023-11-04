@@ -62,17 +62,17 @@ Route.group(() => {
 
   // HOLIDAY ROUTES
   Route.group(() => {
-    Route.get('/holidays', 'Holiday/HolidayTypesController.fetchAllHoliday')
-    Route.post('/holidays', 'Holiday/HolidayTypesController.createHoliday')
-    Route.put('/holidays/:id', 'Holiday/HolidayTypesController.updateHoliday')
-    Route.delete('/holidays/:id', 'Holiday/HolidayTypesController.deleteHoliday')
+    Route.get('/holiday-types', 'Holiday/HolidayTypesController.fetchAllHoliday')
+    Route.post('/holiday-types', 'Holiday/HolidayTypesController.createHoliday')
+    Route.put('/holiday-types/:id', 'Holiday/HolidayTypesController.updateHoliday')
+    Route.delete('/holiday-types/:id', 'Holiday/HolidayTypesController.deleteHoliday')
   }).middleware(['auth:jwt', 'subdomain'])
 
   // LEAVE ROUTES
   Route.group(() => {
-    Route.get('/leave', 'Leave/LeaveTypesController.fetchAllLeaveTypes')
-    Route.post('/leave', 'Leave/LeaveTypesController.createLeaveType')
-    Route.put('/leave/:id', 'Leave/LeaveTypesController.updateLeaveType')
-    Route.delete('/leave/:id', 'Leave/LeaveTypesController.deleteLeaveType')
+    Route.get('/leave-types', 'Leave/LeaveTypesController.fetchAllLeaveTypes')
+    Route.post('/leave-types', 'Leave/LeaveTypesController.createLeaveType')
+    Route.put('/leave-types/:id', 'Leave/LeaveTypesController.updateLeaveType')
+    Route.delete('/leave-types/:id', 'Leave/LeaveTypesController.deleteLeaveType')
   }).middleware(['auth:jwt', 'subdomain'])
 }).prefix('/api/v1')

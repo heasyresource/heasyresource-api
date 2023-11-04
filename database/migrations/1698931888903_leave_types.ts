@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.string('name').notNullable()
       table.boolean('is_paid').defaultTo(false)
       table.uuid('company_id').notNullable()
-      table.text('comments').notNullable()
+      table.text('comments').nullable()
       table.string('availability').notNullable()
       table.boolean('is_deleted').notNullable().defaultTo(false)
       table.timestamps(true, true)

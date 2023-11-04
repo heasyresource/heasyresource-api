@@ -25,7 +25,7 @@ export default class LeaveType extends BaseModel {
   public companyId: string
 
   @column()
-  public comments: string
+  public comments: string | undefined
 
   @column()
   public availability: string

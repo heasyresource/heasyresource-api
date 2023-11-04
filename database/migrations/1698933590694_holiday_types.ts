@@ -11,7 +11,7 @@ export default class extends BaseSchema {
       table.uuid('company_id').notNullable()
       table.string('availability').notNullable()
       table.boolean('is_paid').notNullable().defaultTo(false)
-      table.text('comments').notNullable()
+      table.text('comments').nullable()
       table.boolean('is_full_day').notNullable().defaultTo(false)
       table.boolean('is_deleted').notNullable().defaultTo(false)
       table.timestamps(true, true)

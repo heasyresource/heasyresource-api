@@ -10,7 +10,7 @@ export default class CreateLeaveTypeValidator {
   public schema = schema.create({
     name: schema.string({ trim: true }, [
       rules.unique({
-        table: 'departments',
+        table: 'leave_types',
         column: 'name',
         where: {
           company_id: this.ctx.request.tenant.id,
@@ -21,50 +21,18 @@ export default class CreateLeaveTypeValidator {
         allow: ['space', 'dash'],
       }),
     ]),
-    isPaid: schema.boolean([
-      rules.unique({
-        table: 'leave_types',
-        column: 'isPaid',
-        where: {
-          company_id: this.ctx.request.tenant.id,
-        },
-        whereNot: { id: this.refs.id },
-      }),
-    ]),
-    comments: schema.string({ trim: true }, [
-      rules.unique({
-        table: 'leave_types',
-        column: 'comments',
-        where: {
-          company_id: this.ctx.request.tenant.id,
-        },
-        whereNot: { id: this.refs.id },
-      }),
-      rules.alphaNum({
-        allow: ['space', 'dash'],
-      }),
-    ]),
-    availability: schema.string({ trim: true }, [
-      rules.unique({
-        table: 'leave_types',
-        column: 'availability',
-        where: {
-          company_id: this.ctx.request.tenant.id,
-        },
-        whereNot: { id: this.refs.id },
-      }),
-      rules.alphaNum({
-        allow: ['space', 'dash'],
-      }),
-    ]),
+    isPaid: schema.boolean(),
+    comments: schema.string.optional({ trim: true }),
+    availability: schema.string({ trim: true }),
   })
 
   public messages: CustomMessages = {
     'name.required': 'Leave name is required.',
     'name.alphaNum': 'Leave name should only contain alphanumeric characters.',
     'name.unique': 'Leave name already exist.',
-    'isPaid.required': 'isPaid is required and must be true or false.',
+    'isPaid.required': 'Select either paid or unpaid.',
+    'isPaid.boolean': 'Select either paid or unpaid.',
     'comments.alphaNum': 'Comments should only contain alphanumeric characters.',
-    'availability.alphaNum': 'Availability should only contain alphanumeric characters.',
+    'availability.required': 'Holiday availability is required.',
   }
 }
