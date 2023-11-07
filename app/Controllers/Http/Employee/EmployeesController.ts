@@ -235,4 +235,37 @@ export default class EmployeesController {
       statusCode: 200,
     })
   }
+
+  public async fetchAllCompanyEmployees({
+    params: { companyId },
+    request,
+    response,
+  }: HttpContextContract) {
+    const page = request.input('page', 1)
+    const perPage = request.input('perPage', 10)
+
+    const employeeRole = await Role.findBy('name', Roles.EMPLOYEE)
+
+    if (!employeeRole) {
+      return response.badRequest({
+        status: 'Bad Request',
+        message: 'Error occured fetching employee.',
+        statusCode: 400,
+      })
+    }
+
+    const employees = await User.query()
+      .where('companyId', companyId)
+      .where('isDeleted', false)
+      .where('roleId', employeeRole.id)
+      .orderBy('createdAt', 'desc')
+      .paginate(page, perPage)
+
+    return response.ok({
+      status: 'Success',
+      message: 'Fetched employees successfully.',
+      statusCode: 200,
+      results: employees,
+    })
+  }
 }
