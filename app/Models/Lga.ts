@@ -2,7 +2,7 @@ import { DateTime } from 'luxon'
 import { BaseModel, column, beforeCreate } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from 'uuid'
 
-export default class Lgas extends BaseModel {
+export default class Lga extends BaseModel {
   public static selfAssignPrimaryKey = true
 
   @column({ isPrimary: true })
@@ -24,7 +24,7 @@ export default class Lgas extends BaseModel {
   public updatedAt: DateTime
 
   @beforeCreate()
-  public static assignUuid(lga: Lgas) {
+  public static assignUuid(lga: Lga) {
     lga.id = uuid()
   }
 }

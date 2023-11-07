@@ -1,6 +1,6 @@
-enum MaritalStatuses {
+enum Genders {
  MALE = 'Male',
  FEMALE = 'Female'
 }
 
-export default MaritalStatuses
+export default Genders

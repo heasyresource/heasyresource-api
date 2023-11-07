@@ -1,5 +1,5 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
-import Lgas from 'App/Models/Lgas'
+import Lga from 'App/Models/Lga'
 import State from 'App/Models/State'
 
 export default class extends BaseSchema {
@@ -854,7 +854,7 @@ export default class extends BaseSchema {
       const lgas = lgaData[state.name]
       if (lgas) {
         for (const lga of lgas) {
-          await Lgas.create({
+          await Lga.create({
             name: lga,
             stateId: state.id,
           })
@@ -864,6 +864,6 @@ export default class extends BaseSchema {
   }
 
   public async down() {
-    await Lgas.query().delete()
+    await Lga.query().delete()
   }
 }

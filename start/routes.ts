@@ -60,6 +60,10 @@ Route.group(() => {
     // EMPLOYEE ROUTES
     Route.group(() => {
       Route.post('/employees', 'Employee/EmployeesController.addEmployee')
+      Route.put('/employees/:userId/personal-details', 'Employee/EmployeesController.updateEmployeePersonalDetails')
+      Route.put('/employees/:userId/contact-details', 'Employee/EmployeesController.updateEmployeeContactDetails')
+      Route.put('/employees/:userId/next-of-kins', 'Employee/EmployeesController.updateEmployeeNextOfKin')
+      Route.put('/employees/:userId/employment-infos', 'Employee/EmployeesController.updateEmployeeEmploymentInfo')
     }).middleware(['auth:jwt', 'subdomain'])
 
   // METADATA ROUTE

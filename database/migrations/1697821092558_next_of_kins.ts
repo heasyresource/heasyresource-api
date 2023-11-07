@@ -12,8 +12,8 @@ export default class extends BaseSchema {
       table.uuid('user_id').references('id').inTable('users').onDelete('CASCADE')
       table.string('first_name').notNullable()
       table.string('last_name').notNullable()
-      table.string('email').notNullable().unique()
-      table.string('phone_number').notNullable().unique()
+      table.string('email').notNullable()
+      table.string('phone_number').notNullable()
       table.text('home_address').notNullable()
       table.enum('relationship', [
         NextOfKInRelationships.CHILD,

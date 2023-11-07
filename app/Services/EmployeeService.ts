@@ -35,4 +35,14 @@ export default class EmployeeService {
 
     return employeeId.join('')
   }
+
+  public static checkValidEmailDomain(emailDomains, email) {
+    if (!emailDomains) return true
+    
+    const splittedEmailDomains = emailDomains.split(',')
+    const splittedEmail = email.split('@')
+    const employeeEmailDomain = '@' + splittedEmail[1]
+
+    return !splittedEmailDomains.find((emailDomain) => emailDomain === employeeEmailDomain) ? false : true
+  }
 }

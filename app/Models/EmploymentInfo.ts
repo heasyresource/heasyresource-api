@@ -27,13 +27,16 @@ export default class EmploymentInfo extends BaseModel {
   public salary: string
 
   @column()
-  public workType: string
+  public workMode: string
 
   @column()
-  public resumptionDate: Date
+  public resumptionDate: string
 
   @column()
   public terminationDate: Date
+
+  @column()
+  public status: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
