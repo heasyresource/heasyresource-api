@@ -5,8 +5,14 @@ import CreateMultipleDepartmentValidator from 'App/Validators/CreateMultipleDepa
 
 export default class DepartmentsController {
   public async fetchAllDepartment({ request, response }: HttpContextContract) {
-    const department = await Department.query().where('companyId', request.tenant.id)
+    const page = request.input('page', 1)
+    const perPage = request.input('perPage', 10)
 
+    const department = await Department.query()
+      .where('companyId', request.tenant.id)
+      .where('isDeleted', false)
+      .orderBy('createdAt', 'desc')
+      .paginate(page, perPage)
     return response.ok({
       status: 'Success',
       message: 'Fetched department successfully.',
