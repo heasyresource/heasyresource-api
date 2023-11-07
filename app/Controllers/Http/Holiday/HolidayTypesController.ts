@@ -4,8 +4,14 @@ import CreateHolidayTypeValidator from 'App/Validators/CreateHolidayTypeValidato
 
 export default class HolidayTypesController {
   public async fetchAllHoliday({ request, response }: HttpContextContract) {
-    const holiday = await HolidayType.query().where('companyId', request.tenant.id)
+    const page = request.input('page', 1)
+    const perPage = request.input('perPage', 10)
 
+    const holiday = await HolidayType.query()
+      .where('companyId', request.tenant.id)
+      .where('isDeleted', false)
+      .orderBy('createdAt', 'desc')
+      .paginate(page, perPage)
     return response.ok({
       status: 'Success',
       message: 'Fetched holiday successfully.',

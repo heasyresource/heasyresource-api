@@ -23,6 +23,7 @@ export default class extends BaseSchema {
         MaritalStatuses.SEPARATED,
       ])
       table.date('date_of_birth').nullable()
+      table.string('nationality').nullable()
       table.string('password').notNullable()
       table.boolean('is_active').notNullable().defaultTo(false)
       table.boolean('is_verified').notNullable().defaultTo(false)

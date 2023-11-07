@@ -132,6 +132,7 @@ export default class RegistrationController {
     company.companySizeId = companySizeId
     company.autoGenerateEmployeeId = autoGenerateEmployeeId
     company.employeeIdFormat = JSON.stringify(employeeIdFormat)
+    company.isCompletedRegistration = true
     await company.save()
 
     return response.ok({

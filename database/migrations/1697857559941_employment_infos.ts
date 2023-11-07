@@ -13,9 +13,10 @@ export default class extends BaseSchema {
       table.uuid('department_id').nullable()
       table.string('position').nullable()
       table.string('salary').nullable()
-      table.enum('work_type', [WorkModes.HYBRID, WorkModes.ONSITE, WorkModes.REMOTE])
+      table.enum('work_mode', [WorkModes.HYBRID, WorkModes.ONSITE, WorkModes.REMOTE])
       table.date('resumption_date').nullable()
       table.date('termination_date').nullable()
+      table.string('status').nullable()
       table.timestamps(true, true)
     })
   }

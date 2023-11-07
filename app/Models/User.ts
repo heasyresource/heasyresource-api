@@ -45,6 +45,12 @@ export default class User extends BaseModel {
   @column()
   public maritalStatus: string
 
+  @column()
+  public dateOfBirth: string
+
+  @column()
+  public nationality: string
+
   @column({ serializeAs: null })
   public password: string
 

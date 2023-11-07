@@ -60,6 +60,19 @@ Route.group(() => {
     // EMPLOYEE ROUTES
     Route.group(() => {
       Route.post('/employees', 'Employee/EmployeesController.addEmployee')
+      Route.put('/employees/:userId/personal-details', 'Employee/EmployeesController.updateEmployeePersonalDetails')
+      Route.put('/employees/:userId/contact-details', 'Employee/EmployeesController.updateEmployeeContactDetails')
+      Route.put('/employees/:userId/next-of-kins', 'Employee/EmployeesController.updateEmployeeNextOfKin')
+      Route.put('/employees/:userId/employment-infos', 'Employee/EmployeesController.updateEmployeeEmploymentInfo')
+      Route.get('/employees/:companyId', 'Employee/EmployeesController.fetchAllCompanyEmployees')
+    }).middleware(['auth:jwt', 'subdomain'])
+
+
+    // COMPANIES ROUTES
+    Route.group(() => {
+      Route.get('/companies/:companyId', 'Company/CompaniesController.getCompanyById')
+      Route.get('/companies/subdomain/:subdomain', 'Company/CompaniesController.getCompanyBySubdomain')
+      Route.get('/companies', 'Company/CompaniesController.fetchAllCompanies')
     }).middleware(['auth:jwt', 'subdomain'])
 
   // METADATA ROUTE
