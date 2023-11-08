@@ -62,7 +62,8 @@ export default class RegistrationValidator {
       rules.unique({ table: 'users', column: 'email' }),
     ]),
     password: schema.string([
-      rules.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/),
+      // rules.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/),
+      rules.regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&_^-])[a-zA-Z\d@$!%*#?&_^-]{8,}$/),
     ]),
   })
 
