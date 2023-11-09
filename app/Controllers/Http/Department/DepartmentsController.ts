@@ -7,12 +7,22 @@ export default class DepartmentsController {
   public async fetchAllDepartment({ request, response }: HttpContextContract) {
     const page = request.input('page', 1)
     const perPage = request.input('perPage', 10)
+    const paginate = request.input('paginate', true)
 
-    const department = await Department.query()
-      .where('companyId', request.tenant.id)
-      .where('isDeleted', false)
-      .orderBy('createdAt', 'desc')
-      .paginate(page, perPage)
+    let department
+    if (paginate === 'false' || paginate === false) {
+      department = await Department.query()
+        .where('companyId', request.tenant.id)
+        .where('isDeleted', false)
+        .orderBy('createdAt', 'desc')
+    } else {
+      department = await Department.query()
+        .where('companyId', request.tenant.id)
+        .where('isDeleted', false)
+        .orderBy('createdAt', 'desc')
+        .paginate(page, perPage)
+    }
+
     return response.ok({
       status: 'Success',
       message: 'Fetched department successfully.',

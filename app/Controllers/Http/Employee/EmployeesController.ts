@@ -312,7 +312,9 @@ export default class EmployeesController {
       .preload('employmentInfo', (builder) => {
         builder.preload('department').preload('employmentType')
       })
-      .preload('contactDetail')
+      .preload('contactDetail', (builder) => {
+        builder.preload('country').preload('state').preload('lga')
+      })
       .preload('nextOfKin')
       .first()
 

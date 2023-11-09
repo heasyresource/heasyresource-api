@@ -1,6 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, beforeCreate, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from 'uuid'
+import Country from './Country'
+import Lga from './Lga'
+import State from './State'
 
 export default class ContactDetail extends BaseModel {
   public static selfAssignPrimaryKey = true
@@ -48,4 +51,13 @@ export default class ContactDetail extends BaseModel {
   public static assignUuid(contactDetail: ContactDetail) {
     contactDetail.id = uuid()
   }
+
+  @belongsTo(() => Country)
+  public country: BelongsTo<typeof Country>
+
+  @belongsTo(() => Lga)
+  public lga: BelongsTo<typeof Lga>
+
+  @belongsTo(() => State)
+  public state: BelongsTo<typeof State>
 }
