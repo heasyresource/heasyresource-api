@@ -67,7 +67,7 @@ export default class VerificationController {
     
     const { email } = validatedBody
 
-    const user = await User.query().where('email', email).where('companyId', request.tenant.id).first()
+    const user = await User.query().where('email', email).first()
 
     if (!user) {
       return response.badRequest({

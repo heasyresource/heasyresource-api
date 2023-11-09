@@ -63,8 +63,6 @@ export default class RegistrationController {
 
       user.useTransaction(trx)
       await user.save()
-      
-      await new VerifyEmail(user).sendLater()
 
       const employmentInfo = new EmploymentInfo()
       employmentInfo.userId = user.id
@@ -77,6 +75,8 @@ export default class RegistrationController {
       
       employmentInfo.useTransaction(trx)
       await employmentInfo.save()
+
+      await new VerifyEmail(user).sendLater()
     })
 
 
