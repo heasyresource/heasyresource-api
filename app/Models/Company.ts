@@ -53,6 +53,9 @@ export default class Company extends BaseModel {
   @column()
   public isActive: boolean
 
+  @column()
+  public status: string
+
   @column({ serializeAs: null })
   public isDeleted: boolean
 

@@ -7,6 +7,8 @@ import Env from '@ioc:Adonis/Core/Env'
 import ResetPasswordValidator from 'App/Validators/ResetPasswordValidator'
 import Hash from '@ioc:Adonis/Core/Hash'
 import VerifyResetPasswordValidator from 'App/Validators/VerifyResetPasswordValidator'
+import Role from 'App/Models/Role'
+import Roles from 'App/Enums/Roles'
 
 const verificationCodeValidity = Env.get('VERIFICATION_CODE_EXPIRY_TIME_IN_MS', 600000)
 const verificationCodeWaitTime = Env.get('VERIFICATION_CODE_RETRY_TIME_IN_MS', 60000)
@@ -14,12 +16,11 @@ const verificationCodeWaitTime = Env.get('VERIFICATION_CODE_RETRY_TIME_IN_MS', 6
 export default class PasswordController {
   public async forgotPassword({ response, request }: HttpContextContract) {
     const validatedBody = await request.validate(EmailValidator)
-
+    const subdomain = request.header('x-subdomain-name')
     const { email } = validatedBody
 
     const user = await User.query()
       .where('email', email)
-      .where('companyId', request.tenant.id)
       .first()
 
     if (!user) {
@@ -29,6 +30,16 @@ export default class PasswordController {
         statusCode: 400,
       })
     }
+    const employeeRole = await Role.findBy('name', Roles.EMPLOYEE)
+
+    if (!subdomain && user.roleId == employeeRole?.id) {
+      return response.badRequest({
+        status: 'Bad Request',
+        message: 'Incorrect email.',
+        statusCode: 400,
+      })
+    }
+
     if (!user.isVerified) {
       return response.unauthorized({
         status: 'Unauthorized',
@@ -89,7 +100,6 @@ export default class PasswordController {
     const user = await User.query()
       .where('email', email)
       .where('verificationCode', resetPasswordCode)
-      .where('companyId', request.tenant.id)
       .first()
 
     if (!user) {
@@ -132,7 +142,6 @@ export default class PasswordController {
     const user = await User.query()
       .where('email', email)
       .where('verificationCode', resetPasswordCode)
-      .where('companyId', request.tenant.id)
       .first()
 
     if (!user) {

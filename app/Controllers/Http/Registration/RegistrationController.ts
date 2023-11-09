@@ -69,11 +69,11 @@ export default class RegistrationController {
       const employmentInfo = new EmploymentInfo()
       employmentInfo.userId = user.id
       employmentInfo.position = position
-      employmentInfo.employeeId = 'HR-' + randomstring.generate({
-        length: 6,
-        charset: 'alphanumeric',
-        capitalization: 'uppercase'
-      })
+      // employmentInfo.employeeId = 'HR-' + randomstring.generate({
+      //   length: 6,
+      //   charset: 'alphanumeric',
+      //   capitalization: 'uppercase'
+      // })
       
       employmentInfo.useTransaction(trx)
       await employmentInfo.save()

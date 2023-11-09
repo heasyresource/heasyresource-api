@@ -34,12 +34,12 @@ export default class EmployeePersonalDetailsValidator {
     ]),
     maritalStatus: schema.enum(Object.values(MaritalStatuses)),
     gender: schema.enum(Object.values(Genders)),
+    logoUrl: schema.string.optional([rules.url()])
   })
 
   public messages: CustomMessages = {
     'firstName.required': 'First name is required.',
     'firstName.alpha': 'First name should only contain alphabets.',
-    'middleName.required': 'Middle name is required.',
     'middleName.alpha': 'Middle name should only contain alphabets.',
     'lastName.required': 'Last name is required.',
     'lastName.alpha': 'Last name should only contain alphabets.',
@@ -50,5 +50,6 @@ export default class EmployeePersonalDetailsValidator {
     'nationality.required': 'Nationality is required.',
     'nationality.alpha': 'Nationality should only contain alphabets.',
     'dateOfBirth.required': 'Date Of Birth is required.',
+    'logoUrl.url': 'Logo must be a valid url.',
   }
 }

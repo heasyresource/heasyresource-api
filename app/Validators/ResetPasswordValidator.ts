@@ -10,6 +10,11 @@ export default class ResetPasswordValidator {
     ]),
     email: schema.string({ trim: true }, [
       rules.email(),
+      rules.normalizeEmail({
+        allLowercase: true,
+        gmailRemoveDots: true,
+        gmailRemoveSubaddress: true,
+      }),
     ]),
     newPassword: schema.string([rules.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)]),
   })

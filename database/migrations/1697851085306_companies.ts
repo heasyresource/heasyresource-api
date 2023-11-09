@@ -21,6 +21,7 @@ export default class extends BaseSchema {
       table.json('employee_id_format').nullable()
       table.boolean('is_completed_registration').notNullable().defaultTo(false)
       table.boolean('is_active').notNullable().defaultTo(false)
+      table.string('status').nullable()
       table.boolean('is_deleted').notNullable().defaultTo(false)
       table.timestamps(true, true)
     })
