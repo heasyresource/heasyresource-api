@@ -11,7 +11,7 @@ export default class MetaDataController {
     const countries = await Country.all()
     const states = await State.all()
     const lgas = await Lga.all()
-    const companySizes = await CompanySize.all()
+    const companySizes = await CompanySize.query().orderBy('order', 'asc')
     const industries = await Industry.all()
     const employmentType = await EmploymentType.all()
 

@@ -12,6 +12,9 @@ export default class CompanySize extends BaseModel {
   public size: string
 
   @column({ serializeAs: null })
+  public order: number
+
+  @column({ serializeAs: null })
   public isDeleted: boolean
 
   @column.dateTime({ autoCreate: true, serializeAs: null  })

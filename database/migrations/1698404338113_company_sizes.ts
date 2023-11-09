@@ -7,6 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
       table.string('size').notNullable()
+      table.integer('order').notNullable()
       table.boolean('is_deleted').notNullable().defaultTo(false)
       table.timestamps(true, true)
     })
