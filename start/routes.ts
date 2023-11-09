@@ -65,6 +65,7 @@ Route.group(() => {
       Route.put('/employees/:userId/next-of-kins', 'Employee/EmployeesController.updateEmployeeNextOfKin')
       Route.put('/employees/:userId/employment-infos', 'Employee/EmployeesController.updateEmployeeEmploymentInfo')
       Route.get('/employees/:companyId', 'Employee/EmployeesController.fetchAllCompanyEmployees')
+      Route.get('/employees/:companyId/employee/:userId', 'Employee/EmployeesController.fetchSingleCompanyEmployee')
     }).middleware(['auth:jwt', 'subdomain'])
 
 

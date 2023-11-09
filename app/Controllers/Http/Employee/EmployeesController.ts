@@ -18,8 +18,17 @@ export default class EmployeesController {
   public async addEmployee({ request, response }: HttpContextContract) {
     const validatedBody = await request.validate(AddEmployeeValidator)
 
-    const { firstName, middleName, lastName, employeeID, position, departmentId, email, gender, logoUrl } =
-      validatedBody
+    const {
+      firstName,
+      middleName,
+      lastName,
+      employeeID,
+      position,
+      departmentId,
+      email,
+      gender,
+      logoUrl,
+    } = validatedBody
 
     if (!EmployeeService.checkValidEmailDomain(request.tenant.emailDomain, email)) {
       return response.badRequest({
@@ -103,7 +112,7 @@ export default class EmployeesController {
       nationality,
       gender,
       maritalStatus,
-      logoUrl
+      logoUrl,
     } = validatedBody
 
     await Database.transaction(async (trx) => {
@@ -261,9 +270,13 @@ export default class EmployeesController {
       .where('companyId', companyId)
       .where('isDeleted', false)
       .where('roleId', employeeRole.id)
-      .preload('role').preload('company').preload('employmentInfo', (builder)=> {
+      .preload('role')
+      .preload('company')
+      .preload('employmentInfo', (builder) => {
         builder.preload('department').preload('employmentType')
-      }).preload('contactDetail')
+      })
+      // .preload('contactDetail')
+      // .preload('nextOfKin')
       .orderBy('createdAt', 'desc')
       .paginate(page, perPage)
 
@@ -272,6 +285,42 @@ export default class EmployeesController {
       message: 'Fetched employees successfully.',
       statusCode: 200,
       results: employees,
+    })
+  }
+
+  public async fetchSingleCompanyEmployee({
+    params: { companyId, userId },
+    response,
+  }: HttpContextContract) {
+    const employeeRole = await Role.findBy('name', Roles.EMPLOYEE)
+
+    if (!employeeRole) {
+      return response.badRequest({
+        status: 'Bad Request',
+        message: 'Error occured fetching employee.',
+        statusCode: 400,
+      })
+    }
+
+    const employee = await User.query()
+      .where('id', userId)
+      .where('companyId', companyId)
+      .where('isDeleted', false)
+      .where('roleId', employeeRole.id)
+      .preload('role')
+      .preload('company')
+      .preload('employmentInfo', (builder) => {
+        builder.preload('department').preload('employmentType')
+      })
+      .preload('contactDetail')
+      .preload('nextOfKin')
+      .first()
+
+    return response.ok({
+      status: 'Success',
+      message: 'Fetched employee successfully.',
+      statusCode: 200,
+      results: employee,
     })
   }
 }
