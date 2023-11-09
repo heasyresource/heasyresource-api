@@ -50,6 +50,7 @@ export default class AddEmployeeValidator {
       }),
     ]),
     gender: schema.enum(Object.values(Genders)),
+    logoUrl: schema.string.optional([rules.url()])
   })
 
   public messages: CustomMessages = {
@@ -69,5 +70,6 @@ export default class AddEmployeeValidator {
     'gender.enum': 'Please select a correct gender.',
     'position.required': 'Position is required.',
     'position.alpha': 'Position should only contain alphabets.',
+    'logoUrl.url': 'Logo must be a valid url.',
   }
 }

@@ -1,6 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, beforeCreate } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, beforeCreate, belongsTo, BelongsTo } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from 'uuid'
+import Department from './Department'
+import EmploymentType from './EmploymentType'
 
 export default class EmploymentInfo extends BaseModel {
   public static selfAssignPrimaryKey = true
@@ -38,14 +40,28 @@ export default class EmploymentInfo extends BaseModel {
   @column()
   public status: string
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: null })
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
 
   @beforeCreate()
   public static assignUuid(employmentInfo: EmploymentInfo) {
     employmentInfo.id = uuid()
   }
+
+  @belongsTo(() => Department,{
+    onQuery: (query) => {
+      query.select('id', 'name', 'code')
+    },
+  })
+  public department: BelongsTo<typeof Department>
+
+  @belongsTo(() => EmploymentType,{
+    onQuery: (query) => {
+      query.select('id', 'name')
+    },
+  })
+  public employmentType: BelongsTo<typeof EmploymentType>
 }

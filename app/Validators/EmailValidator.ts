@@ -6,6 +6,11 @@ export default class EmailValidator {
   public schema = schema.create({
     email: schema.string({ trim: true }, [
       rules.email(),
+      rules.normalizeEmail({
+        allLowercase: true,
+        gmailRemoveDots: true,
+        gmailRemoveSubaddress: true,
+      }),
     ]),
   })
 

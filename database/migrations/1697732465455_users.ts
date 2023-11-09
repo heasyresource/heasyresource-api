@@ -24,6 +24,7 @@ export default class extends BaseSchema {
       ])
       table.date('date_of_birth').nullable()
       table.string('nationality').nullable()
+      table.text('logo_url').nullable()
       table.string('password').notNullable()
       table.boolean('is_active').notNullable().defaultTo(false)
       table.boolean('is_verified').notNullable().defaultTo(false)

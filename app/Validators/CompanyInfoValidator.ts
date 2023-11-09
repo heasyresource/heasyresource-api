@@ -10,6 +10,11 @@ export default class CompanyInfoValidator {
     companyEmail: schema.string({ trim: true }, [
       rules.email(),
       rules.unique({ table: 'companies', column: 'email' }),
+      rules.normalizeEmail({
+        allLowercase: true,
+        gmailRemoveDots: true,
+        gmailRemoveSubaddress: true,
+      }),
     ]),
     companyWebsite: schema.string({ trim: true }, [
       rules.url(),

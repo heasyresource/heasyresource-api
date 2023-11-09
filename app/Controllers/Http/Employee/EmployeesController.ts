@@ -18,7 +18,7 @@ export default class EmployeesController {
   public async addEmployee({ request, response }: HttpContextContract) {
     const validatedBody = await request.validate(AddEmployeeValidator)
 
-    const { firstName, middleName, lastName, employeeID, position, departmentId, email, gender } =
+    const { firstName, middleName, lastName, employeeID, position, departmentId, email, gender, logoUrl } =
       validatedBody
 
     if (!EmployeeService.checkValidEmailDomain(request.tenant.emailDomain, email)) {
@@ -57,6 +57,7 @@ export default class EmployeesController {
       user.isVerified = true
       user.roleId = employeeRole.id
       user.companyId = request.tenant.id
+      user.logoUrl = logoUrl
 
       user.useTransaction(trx)
       await user.save()
@@ -102,6 +103,7 @@ export default class EmployeesController {
       nationality,
       gender,
       maritalStatus,
+      logoUrl
     } = validatedBody
 
     await Database.transaction(async (trx) => {
@@ -114,6 +116,7 @@ export default class EmployeesController {
       user.maritalStatus = maritalStatus
       user.dateOfBirth = dateOfBirth
       user.nationality = nationality
+      user.logoUrl = logoUrl
 
       user.useTransaction(trx)
       await user.save()
@@ -258,6 +261,9 @@ export default class EmployeesController {
       .where('companyId', companyId)
       .where('isDeleted', false)
       .where('roleId', employeeRole.id)
+      .preload('role').preload('company').preload('employmentInfo', (builder)=> {
+        builder.preload('department').preload('employmentType')
+      }).preload('contactDetail')
       .orderBy('createdAt', 'desc')
       .paginate(page, perPage)
 

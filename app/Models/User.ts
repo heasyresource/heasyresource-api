@@ -2,6 +2,7 @@ import { DateTime } from 'luxon'
 import {
   BaseModel,
   BelongsTo,
+  HasOne,
   ModelQueryBuilderContract,
   beforeCreate,
   beforeFetch,
@@ -9,11 +10,14 @@ import {
   beforeSave,
   belongsTo,
   column,
+  hasOne,
 } from '@ioc:Adonis/Lucid/Orm'
 import Hash from '@ioc:Adonis/Core/Hash'
 import { v4 as uuid } from 'uuid'
 import Role from './Role'
 import Company from './Company'
+import EmploymentInfo from './EmploymentInfo'
+import ContactDetail from './ContactDetail'
 
 export default class User extends BaseModel {
   public static selfAssignPrimaryKey = true
@@ -50,6 +54,9 @@ export default class User extends BaseModel {
 
   @column()
   public nationality: string
+
+  @column()
+  public logoUrl: string | undefined
 
   @column({ serializeAs: null })
   public password: string
@@ -105,6 +112,12 @@ export default class User extends BaseModel {
     },
   })
   public company: BelongsTo<typeof Company>
+
+  @hasOne(() => EmploymentInfo)
+  public employmentInfo: HasOne<typeof EmploymentInfo>
+
+  @hasOne(() => ContactDetail)
+  public contactDetail: HasOne<typeof ContactDetail>
 
   @beforeFetch()
   @beforeFind()

@@ -40,12 +40,12 @@ Route.group(() => {
       Route.post('/complete-registration', 'Registration/RegistrationController.completeCompanyRegistration')
     }).middleware(['auth:jwt'])
 
-  Route.group(() => {
+  // Route.group(() => {
     Route.post('/account/resend-code', 'Verification/VerificationController.resendVerificationCode')
     Route.post('/password/forgot', 'Password/PasswordController.forgotPassword')
     Route.post('/password/verify-code', 'Password/PasswordController.verifyResetPasswordCode')
     Route.put('/password/reset', 'Password/PasswordController.resetPassword')
-  }).middleware(['subdomain'])
+  // }).middleware(['subdomain']) 
 
   // DEPARTMENTS ROUTES
   Route.group(() => {
