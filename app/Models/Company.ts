@@ -1,6 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, beforeCreate, beforeFetch, beforeFind, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, beforeCreate, beforeFetch, beforeFind, ModelQueryBuilderContract, belongsTo, BelongsTo } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from 'uuid'
+import Country from './Country'
+import CompanySize from './CompanySize'
+import Industry from './Industry'
 
 export default class Company extends BaseModel {
   public static selfAssignPrimaryKey = true
@@ -75,4 +78,13 @@ export default class Company extends BaseModel {
   public static ignoreDeleted(query: ModelQueryBuilderContract<typeof Company>) {
     query.where('isDeleted', false)
   }
+
+  @belongsTo(() => Country)
+  public country: BelongsTo<typeof Country>
+
+  @belongsTo(() => CompanySize)
+  public companySize: BelongsTo<typeof CompanySize>
+
+  @belongsTo(() => Industry)
+  public industry: BelongsTo<typeof Industry>
 }

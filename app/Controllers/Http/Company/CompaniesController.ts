@@ -3,7 +3,7 @@ import Company from 'App/Models/Company'
 
 export default class CompaniesController {
   public async getCompanyById({ params: { companyId }, response }: HttpContextContract) {
-    const company = await Company.query().where('id', companyId).first()
+    const company = await Company.query().where('id', companyId).preload('country').preload('companySize').preload('industry').first()
 
     return response.ok({
       status: 'Success',
@@ -30,6 +30,7 @@ export default class CompaniesController {
 
     const companies = await Company.query()
       .where('isDeleted', false)
+      .preload('country').preload('companySize').preload('industry')
       .orderBy('createdAt', 'desc')
       .paginate(page, perPage)
     return response.ok({
