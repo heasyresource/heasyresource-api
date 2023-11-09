@@ -69,11 +69,11 @@ Route.group(() => {
 
 
     // COMPANIES ROUTES
+    Route.get('/companies/subdomain/:subdomain', 'Company/CompaniesController.getCompanyBySubdomain')
     Route.group(() => {
       Route.get('/companies/:companyId', 'Company/CompaniesController.getCompanyById')
-      Route.get('/companies/subdomain/:subdomain', 'Company/CompaniesController.getCompanyBySubdomain')
       Route.get('/companies', 'Company/CompaniesController.fetchAllCompanies')
-    }).middleware(['auth:jwt', 'subdomain'])
+    }).middleware(['auth:jwt'])
 
   // METADATA ROUTE
   Route.get('/metadata', 'MetaData/MetaDataController.metadata')
