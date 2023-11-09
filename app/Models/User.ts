@@ -2,6 +2,7 @@ import { DateTime } from 'luxon'
 import {
   BaseModel,
   BelongsTo,
+  HasMany,
   HasOne,
   ModelQueryBuilderContract,
   beforeCreate,
@@ -10,6 +11,7 @@ import {
   beforeSave,
   belongsTo,
   column,
+  hasMany,
   hasOne,
 } from '@ioc:Adonis/Lucid/Orm'
 import Hash from '@ioc:Adonis/Core/Hash'
@@ -18,6 +20,7 @@ import Role from './Role'
 import Company from './Company'
 import EmploymentInfo from './EmploymentInfo'
 import ContactDetail from './ContactDetail'
+import NextOfKin from './NextOfKin'
 
 export default class User extends BaseModel {
   public static selfAssignPrimaryKey = true
@@ -118,6 +121,9 @@ export default class User extends BaseModel {
 
   @hasOne(() => ContactDetail)
   public contactDetail: HasOne<typeof ContactDetail>
+
+  @hasMany(() => NextOfKin)
+  public nextOfKin: HasMany<typeof NextOfKin>
 
   @beforeFetch()
   @beforeFind()
