@@ -111,7 +111,7 @@ export default class User extends BaseModel {
 
   @belongsTo(() => Company, {
     onQuery: (query) => {
-      query.select('name', 'subdomain')
+      query.select('name', 'subdomain', 'isActive')
     },
   })
   public company: BelongsTo<typeof Company>
