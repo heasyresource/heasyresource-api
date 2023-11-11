@@ -36,16 +36,19 @@ Route.group(() => {
   Route.post('/refresh', 'Authentication/LoginController.refreshToken')
   Route.post('/account/verify', 'Verification/VerificationController.verifyAccount')
 
-    Route.group(() => {
-      Route.post('/complete-registration', 'Registration/RegistrationController.completeCompanyRegistration')
-    }).middleware(['auth:jwt'])
+  Route.group(() => {
+    Route.post(
+      '/complete-registration',
+      'Registration/RegistrationController.completeCompanyRegistration'
+    )
+  }).middleware(['auth:jwt'])
 
   // Route.group(() => {
-    Route.post('/account/resend-code', 'Verification/VerificationController.resendVerificationCode')
-    Route.post('/password/forgot', 'Password/PasswordController.forgotPassword')
-    Route.post('/password/verify-code', 'Password/PasswordController.verifyResetPasswordCode')
-    Route.put('/password/reset', 'Password/PasswordController.resetPassword')
-  // }).middleware(['subdomain']) 
+  Route.post('/account/resend-code', 'Verification/VerificationController.resendVerificationCode')
+  Route.post('/password/forgot', 'Password/PasswordController.forgotPassword')
+  Route.post('/password/verify-code', 'Password/PasswordController.verifyResetPasswordCode')
+  Route.put('/password/reset', 'Password/PasswordController.resetPassword')
+  // }).middleware(['subdomain'])
 
   // DEPARTMENTS ROUTES
   Route.group(() => {
@@ -54,27 +57,59 @@ Route.group(() => {
     Route.put('/departments/:id', 'Department/DepartmentsController.updateDepartment')
     Route.delete('/departments/:id', 'Department/DepartmentsController.deleteDepartment')
     Route.post('/departments/multiple', 'Department/DepartmentsController.createMultipleDepartment')
-
   }).middleware(['auth:jwt', 'subdomain'])
 
-    // EMPLOYEE ROUTES
-    Route.group(() => {
-      Route.post('/employees', 'Employee/EmployeesController.addEmployee')
-      Route.put('/employees/:userId/personal-details', 'Employee/EmployeesController.updateEmployeePersonalDetails')
-      Route.put('/employees/:userId/contact-details', 'Employee/EmployeesController.updateEmployeeContactDetails')
-      Route.put('/employees/:userId/next-of-kins', 'Employee/EmployeesController.updateEmployeeNextOfKin')
-      Route.put('/employees/:userId/employment-infos', 'Employee/EmployeesController.updateEmployeeEmploymentInfo')
-      Route.get('/employees/:companyId', 'Employee/EmployeesController.fetchAllCompanyEmployees')
-      Route.get('/employees/:companyId/employee/:userId', 'Employee/EmployeesController.fetchSingleCompanyEmployee')
-    }).middleware(['auth:jwt', 'subdomain'])
+  // EMPLOYEE ROUTES
+  Route.group(() => {
+    Route.post('/employees', 'Employee/EmployeesController.addEmployee')
+    Route.put(
+      '/employees/:userId/personal-details',
+      'Employee/EmployeesController.updateEmployeePersonalDetails'
+    )
+    Route.put(
+      '/employees/:userId/contact-details',
+      'Employee/EmployeesController.updateEmployeeContactDetails'
+    )
+    Route.put(
+      '/employees/:userId/next-of-kins',
+      'Employee/EmployeesController.updateEmployeeNextOfKin'
+    )
+    Route.put(
+      '/employees/:userId/employment-infos',
+      'Employee/EmployeesController.updateEmployeeEmploymentInfo'
+    )
+    Route.post('/employees/:userId/educations', 'Employee/EmployeesController.addEmployeeEducation')
+    Route.post(
+      '/employees/:userId/work-experiences',
+      'Employee/EmployeesController.addEmployeeWorkExperience'
+    )
+    Route.post(
+      '/employees/:userId/license-or-certifications',
+      'Employee/EmployeesController.addEmployeeLicenseOrCertification'
+    )
 
+    Route.put('/employees/:userId/educations/:educationId', 'Employee/EmployeesController.updateEmployeeEducation')
+    Route.put(
+      '/employees/:userId/work-experiences/:workExperienceId',
+      'Employee/EmployeesController.updateEmployeeWorkExperience'
+    )
+    Route.put(
+      '/employees/:userId/license-or-certifications/:licenseId',
+      'Employee/EmployeesController.updateEmployeeLicenseOrCertification'
+    )
+    Route.get('/employees/:companyId', 'Employee/EmployeesController.fetchAllCompanyEmployees')
+    Route.get(
+      '/employees/:companyId/employee/:userId',
+      'Employee/EmployeesController.fetchSingleCompanyEmployee'
+    )
+  }).middleware(['auth:jwt', 'subdomain'])
 
-    // COMPANIES ROUTES
-    Route.get('/companies/subdomain/:subdomain', 'Company/CompaniesController.getCompanyBySubdomain')
-    Route.group(() => {
-      Route.get('/companies/:companyId', 'Company/CompaniesController.getCompanyById')
-      Route.get('/companies', 'Company/CompaniesController.fetchAllCompanies')
-    }).middleware(['auth:jwt'])
+  // COMPANIES ROUTES
+  Route.get('/companies/subdomain/:subdomain', 'Company/CompaniesController.getCompanyBySubdomain')
+  Route.group(() => {
+    Route.get('/companies/:companyId', 'Company/CompaniesController.getCompanyById')
+    Route.get('/companies', 'Company/CompaniesController.fetchAllCompanies')
+  }).middleware(['auth:jwt'])
 
   // METADATA ROUTE
   Route.get('/metadata', 'MetaData/MetaDataController.metadata')
