@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from '@ioc:Adonis/Lucid/Database'
 import Roles from 'App/Enums/Roles'
+import Statuses from 'App/Enums/Statuses'
 import VerifyEmail from 'App/Mailers/VerifyEmail'
 import Company from 'App/Models/Company'
 import EmploymentInfo from 'App/Models/EmploymentInfo'
@@ -10,6 +11,7 @@ import CompanyInfoValidator from 'App/Validators/CompanyInfoValidator'
 import CompleteCompanyRegistrationValidator from 'App/Validators/CompleteCompanyRegistrationValidator'
 import RegistrationValidator from 'App/Validators/RegistrationValidator'
 import randomstring from 'randomstring'
+import Event from '@ioc:Adonis/Core/Event'
 
 export default class RegistrationController {
   public async register({ request, response }: HttpContextContract) {
@@ -45,6 +47,7 @@ export default class RegistrationController {
       company.website = companyWebsite
       company.industryId = industryId
       company.phoneNumber = companyPhoneNumber
+      company.status = Statuses.PENDING
 
       company.useTransaction(trx)
       await company.save()
@@ -77,6 +80,7 @@ export default class RegistrationController {
       await employmentInfo.save()
 
       await new VerifyEmail(user).sendLater()
+      Event.emit('new:company', { companyId: company.id })
     })
 
 
