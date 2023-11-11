@@ -45,6 +45,6 @@ export default class EmployeeInfoValidator {
     'position.alpha': 'Position should only contain alphabets.',
     'workMode.required': 'Work mode is required.',
     'workMode.enum': 'Please select a correct work mode.',
-    'resumptionDate.required': 'Resumption date is required.'
+    'resumptionDate.required': 'Resumption date is required.',
   }
 }

@@ -13,6 +13,12 @@ import EmployeeContactDetailsValidator from 'App/Validators/EmployeeContactDetai
 import NextOfKin from 'App/Models/NextOfKin'
 import EmployeeNextOfKinValidator from 'App/Validators/EmployeeNextOfKinValidator'
 import EmployeeInfoValidator from 'App/Validators/EmployeeInfoValidator'
+import EmployeeEducationValidator from 'App/Validators/EmployeeEducationValidator'
+import Education from 'App/Models/Education'
+import WorkExperience from 'App/Models/WorkExperience'
+import LicenseOrCertification from 'App/Models/LicenseOrCertification'
+import EmployeeWorkExperienceValidator from 'App/Validators/EmployeeWorkExperienceValidator'
+import EmployeeLicenseOrCertificationValidator from 'App/Validators/EmployeeLicenseOrCertificationValidator'
 
 export default class EmployeesController {
   public async addEmployee({ request, response }: HttpContextContract) {
@@ -323,6 +329,105 @@ export default class EmployeesController {
       message: 'Fetched employee successfully.',
       statusCode: 200,
       results: employee,
+    })
+  }
+
+  public async updateEmployeeEducation({
+    request,
+    response,
+    params: { userId },
+  }: HttpContextContract) {
+    const validatedBody = await request.validate(EmployeeEducationValidator)
+
+    const { institution, degree, fieldOfStudy, grade, startDate, endDate, description } =
+      validatedBody
+
+    const searchPayload = { userId }
+    const persistancePayload = {
+      institution,
+      degree,
+      fieldOfStudy,
+      grade,
+      startDate,
+      endDate,
+      description,
+    }
+
+    await Education.updateOrCreate(searchPayload, persistancePayload)
+    return response.ok({
+      status: 'Success',
+      message: 'Updated details successfully',
+      statusCode: '200',
+    })
+  }
+
+  public async updateEmployeeWorkExperience({
+    request,
+    response,
+    params: { userId },
+  }: HttpContextContract) {
+    const validatedBody = await request.validate(EmployeeWorkExperienceValidator)
+
+    const {
+      companyName,
+      position,
+      location,
+      employmentTypeId,
+      workMode,
+      description,
+      startDate,
+      endDate,
+      isPresent,
+    } = validatedBody
+
+    const searchPayload = { userId }
+    const persistancePayload = {
+      companyName,
+      position,
+      location,
+      employmentTypeId,
+      workMode,
+      description,
+      startDate,
+      endDate,
+      isPresent,
+    }
+
+    await WorkExperience.updateOrCreate(searchPayload, persistancePayload)
+
+    response.ok({
+      status: 'Success',
+      message: 'Updated details successfully',
+      statusCode: '200',
+    })
+  }
+
+  public async updateEmployeeLicenseOrCertification({
+    request,
+    response,
+    params: { userId },
+  }: HttpContextContract) {
+    const validatedBody = await request.validate(EmployeeLicenseOrCertificationValidator)
+
+    const { name, issuingOrganization, issueDate, expirationDate, credentialId, credentialUrl } =
+      validatedBody
+
+    const searchPayload = { userId }
+    const persistancePayload = {
+      name,
+      issuingOrganization,
+      issueDate,
+      expirationDate,
+      credentialId,
+      credentialUrl,
+    }
+
+    await LicenseOrCertification.updateOrCreate(searchPayload, persistancePayload)
+
+    response.ok({
+      status: 'Success',
+      message: 'Updated details successfully',
+      statusCode: '200',
     })
   }
 }
