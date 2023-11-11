@@ -1,5 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Statuses from 'App/Enums/Statuses'
 import Company from 'App/Models/Company'
+import CompanyStatusValidator from 'App/Validators/CompanyStatusValidator'
 
 export default class CompaniesController {
   public async getCompanyById({ params: { companyId }, response }: HttpContextContract) {
@@ -38,6 +40,25 @@ export default class CompaniesController {
       message: 'Fetched companies successfully.',
       statusCode: 200,
       results: companies,
+    })
+  }
+
+  public async updateCompanyStatus({ params: { companyId }, request, response }: HttpContextContract) {
+    const company = await Company.query().where('id', companyId).firstOrFail()
+    const { status } = await request.validate(CompanyStatusValidator)
+
+    const oldStatus = company.status
+    company.status = status
+    company.isActive = status === Statuses.APPROVED ? true : false 
+
+    if (oldStatus === Statuses.PENDING && status === Statuses.APPROVED) {
+      // Send Mail
+    }
+
+    return response.ok({
+      status: 'Success',
+      message: 'Update company status successfully.',
+      statusCode: 200
     })
   }
 }
