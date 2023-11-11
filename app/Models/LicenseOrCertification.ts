@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, beforeCreate } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, beforeCreate, beforeFetch, beforeFind, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from 'uuid'
 
 export default class LicenseOrCertification extends BaseModel {
@@ -18,10 +18,10 @@ export default class LicenseOrCertification extends BaseModel {
   public issuingOrganization: string
 
   @column()
-  public issueDate: DateTime
+  public issueDate: string
 
   @column()
-  public expirationDate: DateTime
+  public expirationDate: string
 
   @column()
   public credentialId: string
@@ -41,5 +41,11 @@ export default class LicenseOrCertification extends BaseModel {
   @beforeCreate()
   public static assignUuid(licenseOrCertification: LicenseOrCertification) {
     licenseOrCertification.id = uuid()
+  }
+  
+  @beforeFetch()
+  @beforeFind()
+  public static ignoreDeleted(query: ModelQueryBuilderContract<typeof LicenseOrCertification>) {
+    query.where('isDeleted', false)
   }
 }

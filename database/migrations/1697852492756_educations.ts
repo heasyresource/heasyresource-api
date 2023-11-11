@@ -13,7 +13,7 @@ export default class extends BaseSchema {
       table.string('grade').notNullable()
       table.dateTime('start_date').notNullable()
       table.dateTime('end_date').notNullable()
-      table.text('description').notNullable()
+      table.text('description').nullable()
       table.boolean('is_deleted').notNullable().defaultTo(false)
       table.timestamps(true, true)
     })

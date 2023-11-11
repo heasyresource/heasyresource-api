@@ -209,7 +209,7 @@ export default class EmployeesController {
     const { type, firstName, lastName, email, phoneNumber, homeAddress, relationship } =
       validatedBody
 
-    const searchPayload = { userId }
+    const searchPayload = { userId, type }
     const persistancePayload = {
       type,
       firstName,
@@ -322,6 +322,11 @@ export default class EmployeesController {
         builder.preload('country').preload('state').preload('lga')
       })
       .preload('nextOfKin')
+      .preload('educations')
+      .preload('workExperiences', (builder) => {
+        builder.preload('employmentType')
+      })
+      .preload('licenseOrCertifications')
       .first()
 
     return response.ok({
@@ -332,7 +337,7 @@ export default class EmployeesController {
     })
   }
 
-  public async updateEmployeeEducation({
+  public async addEmployeeEducation({
     request,
     response,
     params: { userId },
@@ -342,26 +347,35 @@ export default class EmployeesController {
     const { institution, degree, fieldOfStudy, grade, startDate, endDate, description } =
       validatedBody
 
-    const searchPayload = { userId }
-    const persistancePayload = {
-      institution,
-      degree,
-      fieldOfStudy,
-      grade,
-      startDate,
-      endDate,
-      description,
-    }
-
-    await Education.updateOrCreate(searchPayload, persistancePayload)
+    await Education.firstOrCreate(
+      {
+        userId,
+        institution,
+        degree,
+        fieldOfStudy,
+        grade,
+        startDate,
+        endDate,
+      },
+      {
+        userId,
+        institution,
+        degree,
+        fieldOfStudy,
+        grade,
+        startDate,
+        endDate,
+        description,
+      }
+    )
     return response.ok({
       status: 'Success',
-      message: 'Updated details successfully',
+      message: 'Added employee education successfully',
       statusCode: '200',
     })
   }
 
-  public async updateEmployeeWorkExperience({
+  public async addEmployeeWorkExperience({
     request,
     response,
     params: { userId },
@@ -380,29 +394,40 @@ export default class EmployeesController {
       isPresent,
     } = validatedBody
 
-    const searchPayload = { userId }
-    const persistancePayload = {
-      companyName,
-      position,
-      location,
-      employmentTypeId,
-      workMode,
-      description,
-      startDate,
-      endDate,
-      isPresent,
-    }
-
-    await WorkExperience.updateOrCreate(searchPayload, persistancePayload)
+    await WorkExperience.firstOrCreate(
+      {
+        userId,
+        companyName,
+        position,
+        location,
+        employmentTypeId,
+        workMode,
+        startDate,
+        endDate,
+        isPresent,
+      },
+      {
+        userId,
+        companyName,
+        position,
+        location,
+        employmentTypeId,
+        workMode,
+        description,
+        startDate,
+        endDate,
+        isPresent,
+      }
+    )
 
     response.ok({
       status: 'Success',
-      message: 'Updated details successfully',
+      message: 'Added employee work experience successfully',
       statusCode: '200',
     })
   }
 
-  public async updateEmployeeLicenseOrCertification({
+  public async addEmployeeLicenseOrCertification({
     request,
     response,
     params: { userId },
@@ -412,21 +437,92 @@ export default class EmployeesController {
     const { name, issuingOrganization, issueDate, expirationDate, credentialId, credentialUrl } =
       validatedBody
 
-    const searchPayload = { userId }
-    const persistancePayload = {
-      name,
-      issuingOrganization,
-      issueDate,
-      expirationDate,
-      credentialId,
-      credentialUrl,
-    }
-
-    await LicenseOrCertification.updateOrCreate(searchPayload, persistancePayload)
+    await LicenseOrCertification.firstOrCreate(
+      {
+        userId,
+        name,
+        issuingOrganization,
+        issueDate,
+        expirationDate,
+      },
+      {
+        userId,
+        name,
+        issuingOrganization,
+        issueDate,
+        expirationDate,
+        credentialId,
+        credentialUrl,
+      }
+    )
 
     response.ok({
       status: 'Success',
-      message: 'Updated details successfully',
+      message: 'Added employee license successfully',
+      statusCode: '200',
+    })
+  }
+
+  public async updateEmployeeEducation({
+    request,
+    response,
+    params: { userId, educationId },
+  }: HttpContextContract) {
+    const validatedBody = await request.validate(EmployeeEducationValidator)
+
+    const employeeEducation = await Education.query()
+    .where('id', educationId)
+    .where('userId', userId)
+    .firstOrFail()
+
+    await employeeEducation.merge(validatedBody).save()
+
+    return response.ok({
+      status: 'Success',
+      message: 'Updated employee education successfully',
+      statusCode: '200',
+    })
+  }
+
+  public async updateEmployeeWorkExperience({
+    request,
+    response,
+    params: { userId, workExperienceId },
+  }: HttpContextContract) {
+    const validatedBody = await request.validate(EmployeeWorkExperienceValidator)
+
+
+    const employeeWorkExperience = await WorkExperience.query()
+    .where('id', workExperienceId)
+    .where('userId', userId)
+    .firstOrFail()
+
+    await employeeWorkExperience.merge(validatedBody).save()
+
+    response.ok({
+      status: 'Success',
+      message: 'Updated employee work experience successfully',
+      statusCode: '200',
+    })
+  }
+
+  public async updateEmployeeLicenseOrCertification({
+    request,
+    response,
+    params: { userId, licenseId },
+  }: HttpContextContract) {
+    const validatedBody = await request.validate(EmployeeLicenseOrCertificationValidator)
+
+    const employeeLicense = await LicenseOrCertification.query()
+    .where('id', licenseId)
+    .where('userId', userId)
+    .firstOrFail()
+
+    await employeeLicense.merge(validatedBody).save()
+
+    response.ok({
+      status: 'Success',
+      message: 'Updated employee license successfully',
       statusCode: '200',
     })
   }

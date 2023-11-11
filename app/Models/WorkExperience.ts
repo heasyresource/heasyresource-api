@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, beforeCreate } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, beforeCreate, beforeFetch, beforeFind, ModelQueryBuilderContract, belongsTo, BelongsTo } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from 'uuid'
+import EmploymentType from './EmploymentType'
 
 export default class WorkExperience extends BaseModel {
   public static selfAssignPrimaryKey = true
@@ -24,16 +25,16 @@ export default class WorkExperience extends BaseModel {
   public employmentTypeId: string
 
   @column()
-  public workType: string
+  public workMode: string
 
   @column()
   public description: string
 
   @column()
-  public startDate: DateTime
+  public startDate: string
 
   @column()
-  public endDate: DateTime
+  public endDate: string
 
   @column()
   public isPresent: boolean
@@ -51,4 +52,17 @@ export default class WorkExperience extends BaseModel {
   public static assignUuid(workExperience: WorkExperience) {
     workExperience.id = uuid()
   }
+
+  @beforeFetch()
+  @beforeFind()
+  public static ignoreDeleted(query: ModelQueryBuilderContract<typeof WorkExperience>) {
+    query.where('isDeleted', false)
+  }
+
+  @belongsTo(() => EmploymentType,{
+    onQuery: (query) => {
+      query.select('id', 'name')
+    },
+  })
+  public employmentType: BelongsTo<typeof EmploymentType>
 }

@@ -21,6 +21,9 @@ import Company from './Company'
 import EmploymentInfo from './EmploymentInfo'
 import ContactDetail from './ContactDetail'
 import NextOfKin from './NextOfKin'
+import Education from './Education'
+import WorkExperience from './WorkExperience'
+import LicenseOrCertification from './LicenseOrCertification'
 
 export default class User extends BaseModel {
   public static selfAssignPrimaryKey = true
@@ -124,6 +127,15 @@ export default class User extends BaseModel {
 
   @hasMany(() => NextOfKin)
   public nextOfKin: HasMany<typeof NextOfKin>
+
+  @hasMany(() => Education)
+  public educations: HasMany<typeof Education>
+
+  @hasMany(() => WorkExperience)
+  public workExperiences: HasMany<typeof WorkExperience>
+
+  @hasMany(() => LicenseOrCertification)
+  public licenseOrCertifications: HasMany<typeof LicenseOrCertification>
 
   @beforeFetch()
   @beforeFind()

@@ -78,14 +78,24 @@ Route.group(() => {
       '/employees/:userId/employment-infos',
       'Employee/EmployeesController.updateEmployeeEmploymentInfo'
     )
-    Route.put('/employees/:userId/education', 'Employee/EmployeeController.updateEmployeeEducation')
+    Route.post('/employees/:userId/educations', 'Employee/EmployeesController.addEmployeeEducation')
+    Route.post(
+      '/employees/:userId/work-experiences',
+      'Employee/EmployeesController.addEmployeeWorkExperience'
+    )
+    Route.post(
+      '/employees/:userId/license-or-certifications',
+      'Employee/EmployeesController.addEmployeeLicenseOrCertification'
+    )
+
+    Route.put('/employees/:userId/educations/:educationId', 'Employee/EmployeesController.updateEmployeeEducation')
     Route.put(
-      '/employees/:userId/work-experience',
-      'Employee/EmployeeController.updateEmployeeWorkExperience'
+      '/employees/:userId/work-experiences/:workExperienceId',
+      'Employee/EmployeesController.updateEmployeeWorkExperience'
     )
     Route.put(
-      '/employees/:userId/license-or-certification',
-      'Employee/EmployeeController.updateEmployeeLicenseOrCertification'
+      '/employees/:userId/license-or-certifications/:licenseId',
+      'Employee/EmployeesController.updateEmployeeLicenseOrCertification'
     )
     Route.get('/employees/:companyId', 'Employee/EmployeesController.fetchAllCompanyEmployees')
     Route.get(

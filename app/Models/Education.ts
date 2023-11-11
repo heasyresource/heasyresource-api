@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, beforeCreate } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, beforeCreate, ModelQueryBuilderContract, beforeFetch, beforeFind } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from 'uuid'
 
 export default class Education extends BaseModel {
@@ -24,13 +24,13 @@ export default class Education extends BaseModel {
   public grade: string
 
   @column()
-  public startDate: DateTime
+  public startDate: string
 
   @column()
-  public endDate: DateTime
+  public endDate: string
 
   @column()
-  public description: string
+  public description: string | undefined
 
   @column({ serializeAs: null })
   public isDeleted: boolean
@@ -44,5 +44,11 @@ export default class Education extends BaseModel {
   @beforeCreate()
   public static assignUuid(education: Education) {
     education.id = uuid()
+  }
+
+  @beforeFetch()
+  @beforeFind()
+  public static ignoreDeleted(query: ModelQueryBuilderContract<typeof Education>) {
+    query.where('isDeleted', false)
   }
 }
