@@ -403,7 +403,6 @@ export default class EmployeesController {
         employmentTypeId,
         workMode,
         startDate,
-        endDate,
         isPresent,
       },
       {
