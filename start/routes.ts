@@ -135,9 +135,9 @@ Route.group(() => {
 
   // USER LEAVE
   Route.group(() => {
-    Route.get('/user-leave', 'Leave/UserLeavesController.fetchAllUserLeaves')
-    Route.post('/user-leave', 'Leave/UserLeavesController.assignLeave')
-    Route.put('/user-leave', 'Leave/UserLeavesController.approveLeave')
-    Route.put('/user-leave', 'Leave/UserLeavesController.rejectLeave')
+    Route.get('/employee/leaves', 'Leave/UserLeavesController.fetchAllEmployeeLeaves')
+    Route.post('/employee/:userId/leaves/assign', 'Leave/UserLeavesController.assignLeave')
+    Route.put('/employee/leaves/:userleaveId/approve', 'Leave/UserLeavesController.approveLeave')
+    Route.put('/employee/leaves/:userleaveId/reject', 'Leave/UserLeavesController.rejectLeave')
   }).middleware(['auth:jwt', 'subdomain'])
 }).prefix('/api/v1')

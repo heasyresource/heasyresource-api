@@ -34,13 +34,13 @@ export default class UserLeave extends BaseModel {
   public status: string
 
   @column()
-  public approvedBy: string
+  public approvedBy: string | null
 
   @column()
   public reasonForRejection: string
 
   @column()
-  public rejectedBy: string
+  public rejectedBy: string | null
 
   @column({ serializeAs: null })
   public isDeleted: boolean

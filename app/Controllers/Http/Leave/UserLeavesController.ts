@@ -1,41 +1,37 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Database from '@ioc:Adonis/Lucid/Database'
 import Statuses from 'App/Enums/Statuses'
+import User from 'App/Models/User'
 import UserLeave from 'App/Models/UserLeave'
-import UserLeaveValidator from 'App/Validators/UserLeaveValidator'
+import AssignLeaveValidator from 'App/Validators/AssignLeaveValidator'
+import RejectLeaveValidator from 'App/Validators/RejectLeaveValidator'
 
 export default class UserLeavesController {
-  public async fetchAllUserLeaves({ request, response }: HttpContextContract) {
+  public async fetchAllEmployeeLeaves({ request, response }: HttpContextContract) {
     const page = request.input('page', 1)
     const perPage = request.input('perPage', 10)
+    const companyId = request.input('companyId', request.tenant.id)
 
-    const userLeaves = await UserLeave.query()
-      .where('companyId', request.tenant.id)
+    const users = await User.query().where('companyId', companyId).select('id')
+    const userIds = users.map((user) => user.id)
+
+    const employeeLeaves = await UserLeave.query()
+      .whereIn('userId', userIds)
       .where('isDeleted', false)
       .orderBy('createdAt', 'desc')
       .paginate(page, perPage)
 
     return response.ok({
       status: 'Success',
-      message: 'Fetched User Leaves successfully',
+      message: 'Fetched employee leaves successfully.',
       statusCode: 200,
-      results: userLeaves,
+      results: employeeLeaves,
     })
   }
 
   public async assignLeave({ request, response, params: { userId } }: HttpContextContract) {
-    const validatedBody = await request.validate(UserLeaveValidator)
+    const validatedBody = await request.validate(AssignLeaveValidator)
 
-    const {
-      leaveTypeId,
-      startDate,
-      endDate,
-      comments,
-      status,
-      approvedBy,
-      reasonForRejection,
-      rejectedBy,
-    } = validatedBody
+    const { leaveTypeId, startDate, endDate, comments } = validatedBody
 
     await UserLeave.firstOrCreate(
       {
@@ -43,11 +39,6 @@ export default class UserLeavesController {
         leaveTypeId,
         startDate,
         endDate,
-        comments,
-        status,
-        approvedBy,
-        reasonForRejection,
-        rejectedBy,
       },
       {
         userId,
@@ -55,38 +46,30 @@ export default class UserLeavesController {
         startDate,
         endDate,
         comments,
-        status,
-        approvedBy,
-        reasonForRejection,
-        rejectedBy,
+        status: Statuses.PENDING,
       }
     )
 
-    response.ok({
+    return response.ok({
       status: 'Success',
-      message: 'Assigned leave to user successfully',
+      message: 'Assigned leave to employee successfully.',
       statusCode: 200,
     })
   }
 
-  public async approveLeave({
-    request,
-    response,
-    params: { leaveId, userId },
-  }: HttpContextContract) {
-    const validatedBody = await request.validate(UserLeaveValidator)
+  public async approveLeave({ response, params: { userleaveId }, auth }: HttpContextContract) {
+    const user = await auth.use('jwt').authenticate()
 
-    const { approvedBy } = validatedBody
-
-    const leave = await UserLeave.query().where('id', leaveId).where('userId', userId).firstOrFail()
+    const leave = await UserLeave.query().where('id', userleaveId).firstOrFail()
 
     leave.status = Statuses.APPROVED
-    leave.approvedBy = approvedBy
+    leave.approvedBy = user.id
+    leave.rejectedBy = null
     await leave.save()
 
     return response.ok({
       status: 'Success',
-      message: 'Leave Approved',
+      message: 'Approved leave successfully.',
       statusCode: 200,
     })
   }
@@ -94,21 +77,25 @@ export default class UserLeavesController {
   public async rejectLeave({
     request,
     response,
-    params: { userId, leaveId },
+    params: { userleaveId },
+    auth,
   }: HttpContextContract) {
-    const validatedBody = await request.validate(UserLeaveValidator)
+    const user = await auth.use('jwt').authenticate()
 
-    const { reasonForRejection, rejectedBy } = validatedBody
+    const validatedBody = await request.validate(RejectLeaveValidator)
 
-    const leave = await UserLeave.query().where('id', leaveId).where('userId', userId).firstOrFail()
+    const { reasonForRejection } = validatedBody
+
+    const leave = await UserLeave.query().where('id', userleaveId).firstOrFail()
     leave.status = Statuses.REJECTED
+    leave.reasonForRejection = reasonForRejection
+    leave.rejectedBy = user.id
+    leave.approvedBy = null
     await leave.save()
-
-    await leave.merge({ reasonForRejection: reasonForRejection, rejectedBy: rejectedBy }).save()
 
     return response.ok({
       status: 'Success',
-      message: 'Rejected Leave successfully',
+      message: 'Rejected leave successfully.',
       statusCode: 200,
     })
   }
