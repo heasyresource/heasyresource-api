@@ -470,9 +470,9 @@ export default class EmployeesController {
     const validatedBody = await request.validate(EmployeeEducationValidator)
 
     const employeeEducation = await Education.query()
-    .where('id', educationId)
-    .where('userId', userId)
-    .firstOrFail()
+      .where('id', educationId)
+      .where('userId', userId)
+      .firstOrFail()
 
     await employeeEducation.merge(validatedBody).save()
 
@@ -490,11 +490,10 @@ export default class EmployeesController {
   }: HttpContextContract) {
     const validatedBody = await request.validate(EmployeeWorkExperienceValidator)
 
-
     const employeeWorkExperience = await WorkExperience.query()
-    .where('id', workExperienceId)
-    .where('userId', userId)
-    .firstOrFail()
+      .where('id', workExperienceId)
+      .where('userId', userId)
+      .firstOrFail()
 
     await employeeWorkExperience.merge(validatedBody).save()
 
@@ -513,9 +512,9 @@ export default class EmployeesController {
     const validatedBody = await request.validate(EmployeeLicenseOrCertificationValidator)
 
     const employeeLicense = await LicenseOrCertification.query()
-    .where('id', licenseId)
-    .where('userId', userId)
-    .firstOrFail()
+      .where('id', licenseId)
+      .where('userId', userId)
+      .firstOrFail()
 
     await employeeLicense.merge(validatedBody).save()
 

@@ -3,13 +3,13 @@ import {
   BaseModel,
   column,
   beforeCreate,
-  ModelQueryBuilderContract,
   beforeFetch,
   beforeFind,
+  ModelQueryBuilderContract,
 } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from 'uuid'
 
-export default class Education extends BaseModel {
+export default class UserLeave extends BaseModel {
   public static selfAssignPrimaryKey = true
 
   @column({ isPrimary: true })
@@ -19,16 +19,7 @@ export default class Education extends BaseModel {
   public userId: string
 
   @column()
-  public institution: string
-
-  @column()
-  public degree: string
-
-  @column()
-  public fieldOfStudy: string
-
-  @column()
-  public grade: string
+  public leaveTypeId: string
 
   @column()
   public startDate: string
@@ -37,7 +28,19 @@ export default class Education extends BaseModel {
   public endDate: string
 
   @column()
-  public description: string | undefined
+  public comments: string
+
+  @column()
+  public status: string
+
+  @column()
+  public approvedBy: string | null
+
+  @column()
+  public reasonForRejection: string
+
+  @column()
+  public rejectedBy: string | null
 
   @column({ serializeAs: null })
   public isDeleted: boolean
@@ -49,13 +52,13 @@ export default class Education extends BaseModel {
   public updatedAt: DateTime
 
   @beforeCreate()
-  public static assignUuid(education: Education) {
-    education.id = uuid()
+  public static assignUuid(userLeave: UserLeave) {
+    userLeave.id = uuid()
   }
 
   @beforeFetch()
   @beforeFind()
-  public static ignoreDeleted(query: ModelQueryBuilderContract<typeof Education>) {
+  public static ignoreDeleted(query: ModelQueryBuilderContract<typeof UserLeave>) {
     query.where('isDeleted', false)
   }
 }

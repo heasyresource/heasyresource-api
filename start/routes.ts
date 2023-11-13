@@ -88,7 +88,10 @@ Route.group(() => {
       'Employee/EmployeesController.addEmployeeLicenseOrCertification'
     )
 
-    Route.put('/employees/:userId/educations/:educationId', 'Employee/EmployeesController.updateEmployeeEducation')
+    Route.put(
+      '/employees/:userId/educations/:educationId',
+      'Employee/EmployeesController.updateEmployeeEducation'
+    )
     Route.put(
       '/employees/:userId/work-experiences/:workExperienceId',
       'Employee/EmployeesController.updateEmployeeWorkExperience'
@@ -129,5 +132,13 @@ Route.group(() => {
     Route.post('/leave-types', 'Leave/LeaveTypesController.createLeaveType')
     Route.put('/leave-types/:id', 'Leave/LeaveTypesController.updateLeaveType')
     Route.delete('/leave-types/:id', 'Leave/LeaveTypesController.deleteLeaveType')
+  }).middleware(['auth:jwt', 'subdomain'])
+
+  // USER LEAVE
+  Route.group(() => {
+    Route.get('/employee/leaves', 'Leave/UserLeavesController.fetchAllEmployeeLeaves')
+    Route.post('/employee/:userId/leaves/assign', 'Leave/UserLeavesController.assignLeave')
+    Route.put('/employee/leaves/:userleaveId/approve', 'Leave/UserLeavesController.approveLeave')
+    Route.put('/employee/leaves/:userleaveId/reject', 'Leave/UserLeavesController.rejectLeave')
   }).middleware(['auth:jwt', 'subdomain'])
 }).prefix('/api/v1')
