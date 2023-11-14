@@ -62,6 +62,7 @@ Route.group(() => {
   // EMPLOYEE ROUTES
   Route.group(() => {
     Route.post('/employees', 'Employee/EmployeesController.addEmployee')
+    Route.post('/employees/bulk', 'Employee/EmployeesController.addBulkEmployee')
     Route.put(
       '/employees/:userId/personal-details',
       'Employee/EmployeesController.updateEmployeePersonalDetails'
