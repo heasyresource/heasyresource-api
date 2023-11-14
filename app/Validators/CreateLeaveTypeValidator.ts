@@ -14,6 +14,7 @@ export default class CreateLeaveTypeValidator {
         column: 'name',
         where: {
           company_id: this.ctx.request.tenant.id,
+          is_deleted: false,
         },
         whereNot: { id: this.refs.id },
       }),

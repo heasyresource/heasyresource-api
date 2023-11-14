@@ -13,6 +13,7 @@ export default class CreateMultipleDepartmentValidator {
             column: 'name',
             where: {
               company_id: this.ctx.request.tenant.id,
+              is_deleted: false,
             },
           }),
           rules.alphaNum({

@@ -6,8 +6,12 @@ import {
   beforeFetch,
   beforeFind,
   ModelQueryBuilderContract,
+  belongsTo,
+  BelongsTo,
 } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from 'uuid'
+import User from './User'
+import LeaveType from './LeaveType'
 
 export default class UserLeave extends BaseModel {
   public static selfAssignPrimaryKey = true
@@ -61,4 +65,18 @@ export default class UserLeave extends BaseModel {
   public static ignoreDeleted(query: ModelQueryBuilderContract<typeof UserLeave>) {
     query.where('isDeleted', false)
   }
+
+  @belongsTo(() => User, {
+    onQuery: (query) => {
+      query.select('firstName', 'lastName')
+    },
+  })
+  public user: BelongsTo<typeof User>
+
+  @belongsTo(() => LeaveType, {
+    onQuery: (query) => {
+      query.select('name')
+    },
+  })
+  public leaveType: BelongsTo<typeof LeaveType>
 }
