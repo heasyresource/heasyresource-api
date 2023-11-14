@@ -102,3 +102,5 @@ export default class UserLeavesController {
     })
   }
 }
+
+module.exports = UserLeavesController

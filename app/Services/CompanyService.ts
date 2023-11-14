@@ -1,4 +1,5 @@
 import HolidayType from 'App/Models/HolidayType'
+import JobCategory from 'App/Models/JobCategory'
 import LeaveType from 'App/Models/LeaveType'
 
 export default class CompanyService {
@@ -78,6 +79,38 @@ export default class CompanyService {
       await HolidayType.createMany(payload)
     } catch (error) {
       console.log('addCompanyHolidayTypes =>', error)
+    }
+  }
+
+  public static async addCompanyJobCategories(companyId: string) {
+    try {
+      const jobCategories = [
+        'Information Technology',
+        'Healthcare',
+        'Finance and Accounting',
+        'Education',
+        'Sales and Marketing',
+        'Engineering',
+        'Customer Service',
+        'Human Resources (HR)',
+        'Hospitality and Tourism',
+        'Creative Arts and Design',
+        'Legal',
+        'Manufacturing and Production',
+        'Science and Research',
+        'Construction and Trades',
+        'Media and Communication',
+      ]
+
+      const payload = jobCategories.map((jobCategory) => {
+        return {
+          name: jobCategory,
+          companyId,
+        }
+      })
+      await JobCategory.createMany(payload)
+    } catch (error) {
+      console.log('addCompanyJobCategories =>', error)
     }
   }
 }

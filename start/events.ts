@@ -20,5 +20,6 @@ Event.on('mail:sent', async ({ message }) => {
 Event.on('new:company', async ({ companyId }) => {
   await CompanyService.addCompanyLeaveTypes(companyId)
   await CompanyService.addCompanyHolidayTypes(companyId)
-  console.log('Added Leave Types and Holiday Types')
+  await CompanyService.addCompanyJobCategories(companyId)
+  console.log('Added Leave Types, Holiday Types and Job Categories')
 })

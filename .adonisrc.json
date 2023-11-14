@@ -26,7 +26,8 @@
     "@adonisjs/auth",
     "adonis5-jwt",
     "@adonisjs/mail",
-    "@adonisjs/view"
+    "@adonisjs/view",
+    "@adonisjs/lucid-slugify"
   ],
   "aceProviders": [
     "@adonisjs/repl"
