@@ -13,17 +13,16 @@ export default class extends BaseSchema {
       table.string('phone_number').notNullable()
       table.string('address').notNullable()
       table.string('city').notNullable()
-      table.uuid('state_id').references('id').inTable('states').onDelete('CASCADE')
-      table.uuid('country_id').references('id').inTable('countries').onDelete('CASCADE')
-      table.uuid('vacancy_id').references('id').inTable('vacancies').onDelete('CASCADE')
+      table.uuid('state_id').notNullable()
+      table.uuid('country_id').notNullable()
+      table.uuid('vacancy_id').notNullable()
       table.text('resume_url').notNullable()
       table.enum('status', [
-        Statuses.APPROVED,
         Statuses.PENDING,
         Statuses.REJECTED,
-        Statuses.SUSPENDED,
+        Statuses.SHORTLISTED,
       ])
-      table.text('reason').notNullable()
+      table.text('reason').nullable()
       table.boolean('is_deleted').notNullable().defaultTo(false)
       table.timestamps(true, true)
     })

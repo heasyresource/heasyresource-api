@@ -9,11 +9,13 @@ export default class VacanciesController {
   public async getAllVacancies({ request, response }: HttpContextContract) {
     const page = request.input('page', 1)
     const perPage = request.input('perPage', 10)
+    const companyId = request.input('companyId', request.tenant.id)
 
     const vacancies = await Vacancy.query()
-      .where('companyId', request.tenant.id)
+      .where('companyId', companyId)
       .where('isDeleted', false)
       .orderBy('createdAt', 'desc')
+      .preload('jobCategory')
       .paginate(page, perPage)
 
     return response.ok({
@@ -25,9 +27,11 @@ export default class VacanciesController {
   }
 
   public async getVacancyById({ request, response, params: { vacancyId } }: HttpContextContract) {
+    const companyId = request.input('companyId', request.tenant.id)
+
     const vacancy = await Vacancy.query()
       .where('id', vacancyId)
-      .where('companyId', request.tenant.id)
+      .where('companyId', companyId)
       .preload('employmentType')
       .preload('jobCategory')
       .firstOrFail()
@@ -41,9 +45,11 @@ export default class VacanciesController {
   }
 
   public async getVacancyBySlug({ request, response, params: { slug } }: HttpContextContract) {
+    const companyId = request.input('companyId', request.tenant.id)
+
     const vacancy = await Vacancy.query()
       .where('slug', slug)
-      .where('companyId', request.tenant.id)
+      .where('companyId', companyId)
       .preload('employmentType')
       .preload('jobCategory')
       .firstOrFail()
@@ -73,6 +79,7 @@ export default class VacanciesController {
     } = validatedBody
 
     await Vacancy.create({
+      companyId: request.tenant.id,
       title,
       jobCategoryId,
       employmentTypeId,
@@ -150,7 +157,7 @@ export default class VacanciesController {
       countryId,
       resumeUrl,
       vacancyId,
-      status: Statuses.PENDING
+      status: Statuses.PENDING,
     })
 
     return response.created({

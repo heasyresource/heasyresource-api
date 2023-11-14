@@ -141,4 +141,38 @@ Route.group(() => {
     Route.put('/employee/leaves/:userleaveId/approve', 'Leave/UserLeavesController.approveLeave')
     Route.put('/employee/leaves/:userleaveId/reject', 'Leave/UserLeavesController.rejectLeave')
   }).middleware(['auth:jwt', 'subdomain'])
+
+  // JOB CATEGORY ROUTES
+  Route.group(() => {
+    Route.get('/job-categories', 'JobCategory/JobCategoriesController.fetchAllJobCategory')
+  }).middleware(['auth:jwt', 'subdomain'])
+
+  // HIRING ROUTES
+  Route.group(() => {
+    Route.get('/vacancies', 'Hiring/VacanciesController.getAllVacancies')
+    Route.get('/vacancies/:vacancyId', 'Hiring/VacanciesController.getVacancyById')
+    Route.post('/vacancies', 'Hiring/VacanciesController.createVacancy')
+    Route.put('/vacancies/:vacancyId', 'Hiring/VacanciesController.updateVacancy')
+    Route.delete('/vacancies/:vacancyId', 'Hiring/VacanciesController.deleteVacancy')
+  }).middleware(['auth:jwt', 'subdomain'])
+  Route.get('/vacancies/slug/:slug', 'Hiring/VacanciesController.getVacancyBySlug').middleware([
+    'subdomain',
+  ])
+  Route.post(
+    '/vacancies/:vacancyId/apply',
+    'Hiring/VacanciesController.applyForVacancy'
+  ).middleware(['subdomain'])
+
+  Route.group(() => {
+    Route.get('/applicants', 'Hiring/ApplicantsController.getAllApplicants')
+    Route.get('/applicants/:applicantId', 'Hiring/ApplicantsController.getApplicantById')
+    Route.post('/vacancies/:vacancyId/applicants', 'Hiring/ApplicantsController.createApplicant')
+    Route.put('/applicants/:applicantId', 'Hiring/ApplicantsController.updateApplicant')
+    Route.delete('/applicants/:applicantId', 'Hiring/ApplicantsController.deleteApplicant')
+    Route.put(
+      '/applicants/:applicantId/shortlist',
+      'Hiring/ApplicantsController.shortlistApplicant'
+    )
+    Route.put('/applicants/:applicantId/reject', 'Hiring/ApplicantsController.rejectApplicant')
+  }).middleware(['auth:jwt', 'subdomain'])
 }).prefix('/api/v1')

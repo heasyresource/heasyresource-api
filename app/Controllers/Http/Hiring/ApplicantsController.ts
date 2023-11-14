@@ -4,6 +4,7 @@ import ApplicantValidator from 'App/Validators/ApplicantValidator'
 import RejectApplicantValidator from 'App/Validators/RejectApplicantValidator'
 import ShortlistApplicantValidator from 'App/Validators/ShortlistApplicantValidator'
 import Statuses from 'App/Enums/Statuses'
+import Vacancy from 'App/Models/Vacancy'
 
 export default class ApplicantsController {
   public async getAllApplicants({ request, response }: HttpContextContract) {
@@ -13,6 +14,7 @@ export default class ApplicantsController {
     const applicants = await Applicant.query()
       .where('isDeleted', false)
       .orderBy('createdAt', 'desc')
+      .preload('vacancy')
       .paginate(page, perPage)
 
     return response.ok({
@@ -23,8 +25,13 @@ export default class ApplicantsController {
     })
   }
 
-  public async getApplicantById({ response, params: { id } }: HttpContextContract) {
-    const applicant = await Applicant.query().where('id', id).firstOrFail()
+  public async getApplicantById({ response, params: { applicantId } }: HttpContextContract) {
+    const applicant = await Applicant.query()
+      .where('id', applicantId)
+      .preload('country')
+      .preload('state')
+      .preload('vacancy')
+      .firstOrFail()
 
     return response.ok({
       status: 'Success',
@@ -36,6 +43,11 @@ export default class ApplicantsController {
 
   public async createApplicant({ request, response, params: { vacancyId } }: HttpContextContract) {
     const validatedBody = await request.validate(ApplicantValidator)
+
+    const vacancy = await Vacancy.query()
+      .where('id', vacancyId)
+      .where('companyId', request.tenant.id)
+      .firstOrFail()
 
     const {
       firstName,
@@ -59,7 +71,7 @@ export default class ApplicantsController {
       stateId,
       countryId,
       resumeUrl,
-      vacancyId,
+      vacancyId: vacancy.id,
       status: Statuses.PENDING,
     })
 

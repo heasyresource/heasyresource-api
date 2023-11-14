@@ -37,16 +37,18 @@ export default class AddVacancyValidator {
   })
 
   public messages: CustomMessages = {
-    'title.required': 'Vacancy Title is required.',
-    'jobCategoryId.required': 'Job Category is required.',
+    'title.required': 'Title is required.',
+    'jobCategoryId.required': 'Please select a valid job category.',
+    'jobCategoryId.uuid': 'Please select a valid job category.',
+    'jobCategoryId.exists': 'Please select a valid job category.',
     'employmentTypeId.required': 'Please select a valid employment type.',
     'employmentTypeId.uuid': 'Please select a valid employment type.',
     'employmentTypeId.exists': 'Please select a valid employment type.',
     'workMode.required': 'Work mode is required.',
     'workMode.enum': 'Please select a correct work mode.',
-    'description.required': 'Vacancy Description is required.',
+    'description.required': 'Description is required.',
     'hiringManager.required': 'Hiring Manager is required.',
-    'numbeOfPosition.required': 'Number of Position is required.',
+    'numberOfPosition.required': 'Number of Position is required.',
     'companyId.required': 'Company is required.',
     'isActive.boolean': 'Active must be either true or false.',
     'isPublished.boolean': 'Published must be either true or false.',

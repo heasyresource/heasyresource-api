@@ -6,8 +6,13 @@ import {
   beforeFetch,
   beforeFind,
   ModelQueryBuilderContract,
+  belongsTo,
+  BelongsTo,
 } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from 'uuid'
+import Country from './Country'
+import State from './State'
+import Vacancy from './Vacancy'
 
 export default class Applicant extends BaseModel {
   public static selfAssignPrimaryKey = true
@@ -70,4 +75,17 @@ export default class Applicant extends BaseModel {
   public static ignoreDeleted(query: ModelQueryBuilderContract<typeof Applicant>) {
     query.where('is_deleted', false)
   }
+
+  @belongsTo(() => Country)
+  public country: BelongsTo<typeof Country>
+
+  @belongsTo(() => State)
+  public state: BelongsTo<typeof State>
+
+  @belongsTo(() => Vacancy, {
+    onQuery: (query) => {
+      query.select('title')
+    },
+  })
+  public vacancy: BelongsTo<typeof Vacancy>
 }
