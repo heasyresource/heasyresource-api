@@ -17,6 +17,8 @@ export default class UserLeavesController {
     const employeeLeaves = await UserLeave.query()
       .whereIn('userId', userIds)
       .where('isDeleted', false)
+      .preload('user')
+      .preload('leaveType')
       .orderBy('createdAt', 'desc')
       .paginate(page, perPage)
 
