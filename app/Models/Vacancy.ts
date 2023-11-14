@@ -10,7 +10,7 @@ import {
   BelongsTo,
 } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from 'uuid'
-// import { slugify } from '@ioc:Adonis/Addons/LucidSlugify'
+import { slugify } from '@ioc:Adonis/Addons/LucidSlugify'
 import EmploymentType from './EmploymentType'
 import JobCategory from './JobCategory'
 
@@ -24,11 +24,11 @@ export default class Vacancy extends BaseModel {
   public title: string
 
   @column()
-  // @slugify({
-  //   strategy: 'shortId',
-  //   fields: ['title'],
-  //   allowUpdates: true,
-  // })
+  @slugify({
+    strategy: 'shortId',
+    fields: ['title'],
+    allowUpdates: true,
+  })
   public slug: string
 
   @column()
