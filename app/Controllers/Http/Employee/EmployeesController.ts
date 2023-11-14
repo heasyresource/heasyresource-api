@@ -484,7 +484,6 @@ export default class EmployeesController {
         name,
         issuingOrganization,
         issueDate,
-        expirationDate,
       },
       {
         userId,
