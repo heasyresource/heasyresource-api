@@ -34,7 +34,7 @@
       "adonis5-jwt",
       "@adonisjs/mail",
       "@adonisjs/view",
-      "@adonisjs/lucid-slugify"
+      // "@adonisjs/lucid-slugify"
     ]
   }
 }
