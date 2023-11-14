@@ -6,13 +6,21 @@ export default class LeaveTypesController {
   public async fetchAllLeaveTypes({ request, response }: HttpContextContract) {
     const page = request.input('page', 1)
     const perPage = request.input('perPage', 10)
+    const paginate = request.input('paginate', true)
 
-    const leaveTypes = await LeaveType.query()
-      .where('companyId', request.tenant.id)
-      .where('isDeleted', false)
-      .orderBy('createdAt', 'desc')
-      .paginate(page, perPage)
-
+    let leaveTypes
+    if (paginate === 'false' || paginate === false) {
+      leaveTypes = await LeaveType.query()
+        .where('companyId', request.tenant.id)
+        .where('isDeleted', false)
+        .orderBy('createdAt', 'desc')
+    } else {
+      leaveTypes = await LeaveType.query()
+        .where('companyId', request.tenant.id)
+        .where('isDeleted', false)
+        .orderBy('createdAt', 'desc')
+        .paginate(page, perPage)
+    }
     return response.ok({
       status: 'Success',
       message: 'Fetched Leaves successfully.',
