@@ -49,7 +49,7 @@ export default class Applicant extends BaseModel {
   public status: string
 
   @column()
-  public reason: string
+  public reason: string | undefined
 
   @column({ serializeAs: null })
   public isDeleted: boolean

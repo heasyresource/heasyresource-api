@@ -34,7 +34,7 @@ export default class ApplicantsController {
     })
   }
 
-  public async createApplicant({ request, response }: HttpContextContract) {
+  public async createApplicant({ request, response, params: { vacancyId } }: HttpContextContract) {
     const validatedBody = await request.validate(ApplicantValidator)
 
     const {
@@ -46,13 +46,10 @@ export default class ApplicantsController {
       city,
       stateId,
       countryId,
-      vacancyId,
       resumeUrl,
-      status,
-      reason,
     } = validatedBody
 
-    await Applicant.firstOrCreate({
+    await Applicant.create({
       firstName,
       lastName,
       email,
@@ -61,10 +58,9 @@ export default class ApplicantsController {
       city,
       stateId,
       countryId,
-      vacancyId,
       resumeUrl,
-      status,
-      reason,
+      vacancyId,
+      status: Statuses.PENDING,
     })
 
     return response.ok({
@@ -74,8 +70,12 @@ export default class ApplicantsController {
     })
   }
 
-  public async updateApplicant({ request, response, params: { id } }: HttpContextContract) {
-    const applicant = await Applicant.query().where('id', id).firstOrFail()
+  public async updateApplicant({
+    request,
+    response,
+    params: { applicantId },
+  }: HttpContextContract) {
+    const applicant = await Applicant.query().where('id', applicantId).firstOrFail()
 
     const validatedBody = await request.validate(ApplicantValidator)
 
@@ -88,8 +88,8 @@ export default class ApplicantsController {
     })
   }
 
-  public async deleteApplicant({ response, params: { id } }: HttpContextContract) {
-    const applicant = await Applicant.query().where('id', id).firstOrFail()
+  public async deleteApplicant({ response, params: { applicantId } }: HttpContextContract) {
+    const applicant = await Applicant.query().where('id', applicantId).firstOrFail()
 
     await applicant.merge({ isDeleted: true }).save()
 
@@ -103,12 +103,9 @@ export default class ApplicantsController {
   public async rejectApplicant({
     request,
     response,
-    params: { applicantId, vacancyId },
+    params: { applicantId },
   }: HttpContextContract) {
-    const applicant = await Applicant.query()
-      .where('id', applicantId)
-      .where('vacancyId', vacancyId)
-      .firstOrFail()
+    const applicant = await Applicant.query().where('id', applicantId).firstOrFail()
 
     const validatedBody = await request.validate(RejectApplicantValidator)
 
@@ -128,12 +125,9 @@ export default class ApplicantsController {
   public async shortlistApplicant({
     request,
     response,
-    params: { applicantId, vacancyId },
+    params: { applicantId },
   }: HttpContextContract) {
-    const applicant = await Applicant.query()
-      .where('id', applicantId)
-      .where('vacancy_id', vacancyId)
-      .firstOrFail()
+    const applicant = await Applicant.query().where('id', applicantId).firstOrFail()
 
     const validatedBody = await request.validate(ShortlistApplicantValidator)
 

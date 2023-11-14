@@ -6,10 +6,15 @@ import {
   beforeFetch,
   beforeFind,
   ModelQueryBuilderContract,
+  belongsTo,
+  BelongsTo,
 } from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuid } from 'uuid'
+import { slugify } from '@ioc:Adonis/Addons/LucidSlugify'
+import EmploymentType from './EmploymentType'
+import JobCategory from './JobCategory'
 
-export default class Vacany extends BaseModel {
+export default class Vacancy extends BaseModel {
   public static selfAssignPrimaryKey = true
 
   @column({ isPrimary: true })
@@ -19,6 +24,11 @@ export default class Vacany extends BaseModel {
   public title: string
 
   @column()
+  @slugify({
+    strategy: 'shortId',
+    fields: ['title'],
+    allowUpdates: true,
+  })
   public slug: string
 
   @column()
@@ -64,13 +74,27 @@ export default class Vacany extends BaseModel {
   public updatedAt: DateTime
 
   @beforeCreate()
-  public static assignUuid(vacancy: Vacany) {
+  public static assignUuid(vacancy: Vacancy) {
     vacancy.id = uuid()
   }
 
   @beforeFetch()
   @beforeFind()
-  public static ignoreDeleted(query: ModelQueryBuilderContract<typeof Vacany>) {
+  public static ignoreDeleted(query: ModelQueryBuilderContract<typeof Vacancy>) {
     query.where('isDeleted', false)
   }
+
+  @belongsTo(() => EmploymentType, {
+    onQuery: (query) => {
+      query.select('name')
+    },
+  })
+  public employmentType: BelongsTo<typeof EmploymentType>
+
+  @belongsTo(() => JobCategory, {
+    onQuery: (query) => {
+      query.select('name')
+    },
+  })
+  public jobCategory: BelongsTo<typeof JobCategory>
 }

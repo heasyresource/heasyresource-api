@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Statuses from 'App/Enums/Statuses'
 import Applicant from 'App/Models/Applicant'
-import Vacany from 'App/Models/Vacany'
+import Vacancy from 'App/Models/Vacancy'
 import AddVacancyValidator from 'App/Validators/AddVacancyValidator'
 import ApplicantValidator from 'App/Validators/ApplicantValidator'
 
@@ -9,7 +10,7 @@ export default class VacanciesController {
     const page = request.input('page', 1)
     const perPage = request.input('perPage', 10)
 
-    const vacancies = await Vacany.query()
+    const vacancies = await Vacancy.query()
       .where('companyId', request.tenant.id)
       .where('isDeleted', false)
       .orderBy('createdAt', 'desc')
@@ -24,9 +25,27 @@ export default class VacanciesController {
   }
 
   public async getVacancyById({ request, response, params: { vacancyId } }: HttpContextContract) {
-    const vacancy = await Vacany.query()
+    const vacancy = await Vacancy.query()
       .where('id', vacancyId)
       .where('companyId', request.tenant.id)
+      .preload('employmentType')
+      .preload('jobCategory')
+      .firstOrFail()
+
+    return response.ok({
+      status: 'Success',
+      message: 'Fetched vacancy successfully',
+      statusCode: 200,
+      result: vacancy,
+    })
+  }
+
+  public async getVacancyBySlug({ request, response, params: { slug } }: HttpContextContract) {
+    const vacancy = await Vacancy.query()
+      .where('slug', slug)
+      .where('companyId', request.tenant.id)
+      .preload('employmentType')
+      .preload('jobCategory')
       .firstOrFail()
 
     return response.ok({
@@ -42,7 +61,6 @@ export default class VacanciesController {
 
     const {
       title,
-      slug,
       jobCategoryId,
       employmentTypeId,
       workMode,
@@ -50,29 +68,22 @@ export default class VacanciesController {
       description,
       hiringManager,
       numberOfPosition,
-      link,
       isActive,
       isPublished,
     } = validatedBody
 
-    await Vacany.firstOrCreate(
-      { title, slug, companyId: request.tenant.id },
-      {
-        title,
-        slug,
-        jobCategoryId,
-        employmentTypeId,
-        workMode,
-        location,
-        description,
-        hiringManager,
-        numberOfPosition,
-        link,
-        isActive,
-        isPublished,
-        companyId: request.tenant.id,
-      }
-    )
+    await Vacancy.create({
+      title,
+      jobCategoryId,
+      employmentTypeId,
+      workMode,
+      location,
+      description,
+      hiringManager,
+      numberOfPosition,
+      isActive,
+      isPublished,
+    })
 
     return response.created({
       status: 'Success',
@@ -81,9 +92,9 @@ export default class VacanciesController {
     })
   }
 
-  public async updateVacancy({ request, response, params: { id } }: HttpContextContract) {
-    const vacancy = await Vacany.query()
-      .where('id', id)
+  public async updateVacancy({ request, response, params: { vacancyId } }: HttpContextContract) {
+    const vacancy = await Vacancy.query()
+      .where('id', vacancyId)
       .where('companyId', request.tenant.id)
       .firstOrFail()
 
@@ -98,9 +109,9 @@ export default class VacanciesController {
     })
   }
 
-  public async deleteVacancy({ request, response, params: { id } }: HttpContextContract) {
-    const vacancy = await Vacany.query()
-      .where('id', id)
+  public async deleteVacancy({ request, response, params: { vacancyId } }: HttpContextContract) {
+    const vacancy = await Vacancy.query()
+      .where('id', vacancyId)
       .where('companyId', request.tenant.id)
       .firstOrFail()
 
@@ -126,25 +137,21 @@ export default class VacanciesController {
       stateId,
       countryId,
       resumeUrl,
-      reason,
     } = validatedBody
 
-    await Applicant.firstOrCreate(
-      { firstName, lastName, vacancyId: vacancyId },
-      {
-        firstName,
-        lastName,
-        email,
-        phoneNumber,
-        address,
-        city,
-        stateId,
-        countryId,
-        resumeUrl,
-        reason,
-        vacancyId: vacancyId,
-      }
-    )
+    await Applicant.create({
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      address,
+      city,
+      stateId,
+      countryId,
+      resumeUrl,
+      vacancyId,
+      status: Statuses.PENDING
+    })
 
     return response.created({
       status: 'Success',
