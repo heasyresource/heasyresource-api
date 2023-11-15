@@ -87,7 +87,7 @@ export default class ApplicantsController {
     response,
     params: { applicantId },
   }: HttpContextContract) {
-    const applicant = await Applxamicant.query().where('id', applicantId).firstOrFail()
+    const applicant = await Applicant.query().where('id', applicantId).firstOrFail()
 
     const validatedBody = await request.validate(ApplicantValidator)
 
