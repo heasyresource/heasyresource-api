@@ -32,12 +32,12 @@ export default class CompanyInfoValidator {
 
   public messages: CustomMessages = {
     'companyName.required': 'Company name is required.',
-    'companyName.unique': 'Company name address already exist.',
+    'companyName.unique': 'Company name already exist.',
     'companyEmail.required': 'Company email address is required.',
     'companyEmail.email': 'Company email address must be a valid email address.',
     'companyEmail.unique': 'Company email address already exist.',
     'companyWebsite.required': 'Company website is required.',
-    'companyWebsite.unique': 'Company website address already exist.',
+    'companyWebsite.unique': 'Company website already exist.',
     'companyWebsite.url': 'Company website must be a valid url.',
     'industryId.required': 'Please select a valid field/industry.',
     'industryId.uuid': 'Please select a valid field/industry.',

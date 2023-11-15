@@ -74,7 +74,7 @@ export default class RegistrationValidator {
     'companyEmail.email': 'Company email address must be a valid email address.',
     'companyEmail.unique': 'Company email address already exist.',
     'companyWebsite.required': 'Company website is required.',
-    'companyWebsite.unique': 'Company website address already exist.',
+    'companyWebsite.unique': 'Company website already exist.',
     'companyWebsite.url': 'Company website must be a valid url.',
     'industryId.required': 'Please select a valid field/industry.',
     'industryId.uuid': 'Please select a valid field/industry.',

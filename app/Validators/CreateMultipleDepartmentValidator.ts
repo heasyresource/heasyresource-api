@@ -39,11 +39,11 @@ export default class CreateMultipleDepartmentValidator {
   public messages: CustomMessages = {
     'departments.*.name.required': 'Department name is required.',
     'departments.*.name.alphaNum': 'Department name should only contain alphanumeric characters.',
-    'departments.*.name.unique': 'Department name address already exist.',
+    'departments.*.name.unique': 'Department name already exist.',
     'departments.*.code.required': 'Department code is required.',
     'departments.*.code.alphaNum': 'Department code should only contain alphanumeric characters.',
     'departments.*.code.maxLength': 'Department code must not be more than to 4 characters.',
     'departments.*.code.minLength': 'Department code must be up to atleast 2 characters.',
-    'departments.*.code.unique': 'Department code address already exist.',
+    'departments.*.code.unique': 'Department code already exist.',
   }
 }
