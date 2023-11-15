@@ -565,4 +565,25 @@ export default class EmployeesController {
       statusCode: '200',
     })
   }
+
+  public async uploadEmployeeProfilePicture({
+    request,
+    response,
+    params: { userId },
+  }: HttpContextContract) {
+    const validatedBody = await request.validate(EmployeePersonalDetailsValidator)
+
+    const {
+      logoUrl,
+    } = validatedBody
+
+    const user = await User.findByOrFail('id', userId)
+    user.logoUrl = logoUrl
+
+    return response.ok({
+      status: 'Success',
+      message: 'Uploaded profile picture successfully.',
+      statusCode: 200,
+    })
+  }
 }
