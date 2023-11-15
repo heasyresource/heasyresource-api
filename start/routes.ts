@@ -145,6 +145,15 @@ Route.group(() => {
   // JOB CATEGORY ROUTES
   Route.group(() => {
     Route.get('/job-categories', 'JobCategory/JobCategoriesController.fetchAllJobCategory')
+    Route.post('/job-categories', 'JobCategory/JobCategoriesController.createJobCategory')
+    Route.put(
+      '/job-categories/:jobCategoryId',
+      'JobCategory/JobCategoriesController.updateJobCategory'
+    )
+    Route.delete(
+      '/job-categories/:jobCategoryId',
+      'JobCategory/JobCategoriesController.deleteJobCategory'
+    )
   }).middleware(['auth:jwt', 'subdomain'])
 
   // HIRING ROUTES
