@@ -22,6 +22,7 @@ import EmployeeLicenseOrCertificationValidator from 'App/Validators/EmployeeLice
 import * as fs from 'fs'
 import { parseStream } from 'fast-csv'
 import Application from '@ioc:Adonis/Core/Application'
+import UrlValidator from 'App/Validators/UrlValidator'
 
 export default class EmployeesController {
   public async addEmployee({ request, response }: HttpContextContract) {
@@ -119,7 +120,7 @@ export default class EmployeesController {
       return new Promise((resolve, reject) => {
         const stream = fs.createReadStream(Application.tmpPath() + '/' + employeesFileURL)
 
-        parseStream(stream, { headers: true, ignoreEmpty: true, maxRows: 5, trim: true })
+        parseStream(stream, { headers: true, ignoreEmpty: true, maxRows: 10, trim: true })
           .on('error', (error) => console.error(error))
           .on('data', (row) => {
             employees.push(row)
@@ -340,21 +341,10 @@ export default class EmployeesController {
     params: { companyId, userId },
     response,
   }: HttpContextContract) {
-    const employeeRole = await Role.findBy('name', Roles.EMPLOYEE)
-
-    if (!employeeRole) {
-      return response.badRequest({
-        status: 'Bad Request',
-        message: 'Error occured fetching employee.',
-        statusCode: 400,
-      })
-    }
-
     const employee = await User.query()
       .where('id', userId)
       .where('companyId', companyId)
       .where('isDeleted', false)
-      .where('roleId', employeeRole.id)
       .preload('role')
       .preload('company')
       .preload('employmentInfo', (builder) => {
@@ -566,19 +556,18 @@ export default class EmployeesController {
     })
   }
 
-  public async uploadEmployeeProfilePicture({
+  public async setEmployeeProfilePicture({
     request,
     response,
     params: { userId },
   }: HttpContextContract) {
-    const validatedBody = await request.validate(EmployeePersonalDetailsValidator)
+    const validatedBody = await request.validate(UrlValidator)
 
-    const {
-      logoUrl,
-    } = validatedBody
+    const { url } = validatedBody
 
     const user = await User.findByOrFail('id', userId)
-    user.logoUrl = logoUrl
+    user.logoUrl = url
+    await user.save()
 
     return response.ok({
       status: 'Success',

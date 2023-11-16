@@ -9,7 +9,7 @@ import User from 'App/Models/User'
 import Role from 'App/Models/Role'
 import Roles from 'App/Enums/Roles'
 import EmploymentInfo from 'App/Models/EmploymentInfo'
-// import AddEmployeeValidator from 'App/Validators/AddEmployeeValidator'
+import { Queue } from '@ioc:Rlanz/Queue';
 
 export default class EmployeeService {
   private static getCompanyInitials(companyName) {
@@ -22,7 +22,7 @@ export default class EmployeeService {
     departmentId: string,
     companyName: string
   ) {
-    const department = await Department.query().where('id', departmentId).firstOrFail()
+    const department = await Department.query().select('code').where('id', departmentId).firstOrFail()
 
     const employeeId: any = []
     for (const item of format) {
@@ -78,9 +78,9 @@ export default class EmployeeService {
   public static async bulkCreate(employees, response, request) {
     const failedRecords: any = []
     for (const employee of employees) {
-      let validatedBody;
+      let validatedBody
       try {
-         validatedBody = await validator.validate({
+        validatedBody = await validator.validate({
           schema: schema.create({
             firstName: schema.string({ trim: true }, [
               rules.alpha({
@@ -154,13 +154,11 @@ export default class EmployeeService {
           reporter: validator.reporters.api,
           data: employee,
         })
-
       } catch (error) {
-        failedRecords.push({employee, validation: error.messages})
+        failedRecords.push({ employee, validation: error.messages })
       }
 
-      if(validatedBody){
-
+      if (validatedBody) {
         const {
           firstName,
           middleName,
@@ -171,9 +169,9 @@ export default class EmployeeService {
           workEmail,
           gender,
         } = validatedBody
-  
+
         const employeeRole = await Role.findBy('name', Roles.EMPLOYEE)
-  
+
         if (!employeeRole) {
           return response.badRequest({
             status: 'Bad Request',
@@ -181,55 +179,90 @@ export default class EmployeeService {
             statusCode: 400,
           })
         }
-  
+
         const generatedPassword = randomstring.generate({
           length: 10,
           charset: ['alphanumeric', '?', '@', '!'],
         })
-  
+
         const department = await Department.query()
           .where('name', departmentName)
           .where('companyId', request.tenant.id)
           .firstOrFail()
-  
-        await Database.transaction(async (trx) => {
-          const user = new User()
-          user.firstName = firstName
-          user.middleName = middleName
-          user.lastName = lastName
-          user.email = workEmail
-          user.gender = gender
-          user.password = generatedPassword
-          user.isActive = true
-          user.isVerified = true
-          user.roleId = employeeRole.id
-          user.companyId = request.tenant.id
-          user.isDefaultPassword = true
-  
-          user.useTransaction(trx)
-          await user.save()
-  
-          //   await new VerifyEmail(user).sendLater()
-  
-          const employmentInfo = new EmploymentInfo()
-          employmentInfo.userId = user.id
-          employmentInfo.position = position
-          employmentInfo.departmentId = department.id
-          employmentInfo.employeeId = !request.tenant.autoGenerateEmployeeId
-            ? employeeID
-            : await EmployeeService.generateEmployeeId(
-                request.tenant.employeeIdFormat,
-                department.id,
-                request.tenant.name
-              )
-  
-          employmentInfo.useTransaction(trx)
-          await employmentInfo.save()
-        })
-        console.log({ validatedBody })
+
+        const payload = {
+          firstName,
+          middleName,
+          lastName,
+          employeeID,
+          position,
+          workEmail,
+          gender,
+          generatedPassword,
+          roleId: employeeRole.id,
+          companyId: request.tenant.id,
+          autoGenerateEmployeeId: request.tenant.autoGenerateEmployeeId,
+          department,
+          employeeIdFormat: request.tenant.employeeIdFormat,
+          companyName: request.tenant.name,
+        }
+        Queue.dispatch('App/Jobs/AddEmployee', payload);
       }
     }
     return failedRecords
+  }
+
+  public static async saveEmployee(payload) {
+    const {
+      firstName,
+      middleName,
+      lastName,
+      employeeID,
+      position,
+      workEmail,
+      gender,
+      generatedPassword,
+      roleId,
+      companyId,
+      autoGenerateEmployeeId,
+      department,
+      employeeIdFormat,
+      companyName,
+    } = payload
+
+    await Database.transaction(async (trx) => {
+      const user = new User()
+      user.firstName = firstName
+      user.middleName = middleName
+      user.lastName = lastName
+      user.email = workEmail
+      user.gender = gender
+      user.password = generatedPassword
+      user.isActive = true
+      user.isVerified = true
+      user.roleId = roleId
+      user.companyId = companyId
+      user.isDefaultPassword = true
+
+      user.useTransaction(trx)
+      await user.save()
+
+      //   await new VerifyEmail(user).sendLater()
+
+      const employmentInfo = new EmploymentInfo()
+      employmentInfo.userId = user.id
+      employmentInfo.position = position
+      employmentInfo.departmentId = department.id
+      employmentInfo.employeeId = !autoGenerateEmployeeId
+        ? employeeID
+        : await EmployeeService.generateEmployeeId(employeeIdFormat, department.id, companyName)
+
+      employmentInfo.useTransaction(trx)
+      await employmentInfo.save()
+
+    })
+
+    console.log('Saved ===>', workEmail);
     
   }
 }

@@ -34,4 +34,7 @@ export default Env.rules({
   VERIFICATION_CODE_RETRY_TIME_IN_MS: Env.schema.number(),
   JWT_PRIVATE_KEY: Env.schema.string(),
   JWT_PUBLIC_KEY: Env.schema.string(),
+  QUEUE_REDIS_HOST: Env.schema.string({ format: 'host' }),
+  QUEUE_REDIS_PORT: Env.schema.number(),
+  QUEUE_REDIS_PASSWORD: Env.schema.string.optional(),
 })

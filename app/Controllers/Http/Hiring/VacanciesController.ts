@@ -134,6 +134,11 @@ export default class VacanciesController {
   public async applyForVacancy({ request, response, params: { vacancyId } }: HttpContextContract) {
     const validatedBody = await request.validate(ApplicantValidator)
 
+    const vacancy = await Vacancy.query()
+      .where('id', vacancyId)
+      .where('companyId', request.tenant.id)
+      .firstOrFail()
+
     const {
       firstName,
       lastName,
@@ -146,19 +151,22 @@ export default class VacanciesController {
       resumeUrl,
     } = validatedBody
 
-    await Applicant.create({
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      address,
-      city,
-      stateId,
-      countryId,
-      resumeUrl,
-      vacancyId,
-      status: Statuses.PENDING,
-    })
+    await Applicant.firstOrCreate(
+      { email, vacancyId: vacancy.id },
+      {
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        address,
+        city,
+        stateId,
+        countryId,
+        resumeUrl,
+        vacancyId: vacancy.id,
+        status: Statuses.PENDING,
+      }
+    )
 
     return response.created({
       status: 'Success',

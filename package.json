@@ -62,6 +62,7 @@
     "@adonisjs/mail": "^8.2.1",
     "@adonisjs/repl": "^3.1.11",
     "@adonisjs/view": "^6.2.0",
+    "@rlanz/bull-queue": "^1.0.6",
     "adonis5-jwt": "^1.1.7",
     "fast-csv": "^4.3.6",
     "luxon": "^3.4.3",
