@@ -9,7 +9,7 @@ import User from 'App/Models/User'
 import Role from 'App/Models/Role'
 import Roles from 'App/Enums/Roles'
 import EmploymentInfo from 'App/Models/EmploymentInfo'
-import { Queue } from '@ioc:Rlanz/Queue';
+import { Queue } from '@ioc:Rlanz/Queue'
 
 export default class EmployeeService {
   private static getCompanyInitials(companyName) {
@@ -22,7 +22,10 @@ export default class EmployeeService {
     departmentId: string,
     companyName: string
   ) {
-    const department = await Department.query().select('code').where('id', departmentId).firstOrFail()
+    const department = await Department.query()
+      .select('code')
+      .where('id', departmentId)
+      .firstOrFail()
 
     const employeeId: any = []
     for (const item of format) {
@@ -107,7 +110,7 @@ export default class EmployeeService {
               }),
               rules.unique({ table: 'users', column: 'email' }),
             ]),
-            phoneNumber: schema.string([
+            phoneNumber: schema.string({ trim: true }, [
               rules.mobile({
                 strict: false,
                 locale: ['en-NG'],
@@ -167,6 +170,7 @@ export default class EmployeeService {
           position,
           departmentName,
           workEmail,
+          phoneNumber,
           gender,
         } = validatedBody
 
@@ -197,6 +201,7 @@ export default class EmployeeService {
           employeeID,
           position,
           workEmail,
+          phoneNumber,
           gender,
           generatedPassword,
           roleId: employeeRole.id,
@@ -206,7 +211,7 @@ export default class EmployeeService {
           employeeIdFormat: request.tenant.employeeIdFormat,
           companyName: request.tenant.name,
         }
-        Queue.dispatch('App/Jobs/AddEmployee', payload);
+        Queue.dispatch('App/Jobs/AddEmployee', payload)
       }
     }
     return failedRecords
@@ -220,6 +225,7 @@ export default class EmployeeService {
       employeeID,
       position,
       workEmail,
+      phoneNumber,
       gender,
       generatedPassword,
       roleId,
@@ -236,6 +242,7 @@ export default class EmployeeService {
       user.middleName = middleName
       user.lastName = lastName
       user.email = workEmail
+      user.phoneNumber = phoneNumber
       user.gender = gender
       user.password = generatedPassword
       user.isActive = true
@@ -259,10 +266,8 @@ export default class EmployeeService {
 
       employmentInfo.useTransaction(trx)
       await employmentInfo.save()
-
     })
 
-    console.log('Saved ===>', workEmail);
-    
+    console.log('Saved ===>', workEmail)
   }
 }

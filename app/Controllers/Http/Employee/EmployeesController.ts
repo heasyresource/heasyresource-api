@@ -128,12 +128,16 @@ export default class EmployeesController {
           .on('end', async (rowCount: number) => {
             console.log(`Parsed ${rowCount} rows`)
             EmployeeService.bulkCreate(employees, response, request)
-              .then((results) => {
+              .then((failedRecords) => {
                 resolve({
-                  status: 'Created',
-                  message: 'Added employee successfully.',
-                  statusCode: 201,
-                  results,
+                  status: 'Success',
+                  message: `Employees uploaded ${
+                    failedRecords.length > 0
+                      ? `with ${failedRecords.length} errors.`
+                      : "successfully."
+                  }`,
+                  statusCode: 200,
+                  failedRecords,
                 })
               })
               .catch((err) => {
@@ -143,6 +147,23 @@ export default class EmployeesController {
           })
       })
     }
+  }
+
+  public async retryAddBulkEmployee({ request, response }: HttpContextContract) {
+    const { employees } = request.body()
+
+    const failedRecords = await EmployeeService.bulkCreate(employees, response, request)
+
+    return response.ok({
+      status: 'Success',
+      message: `Employees uploaded ${
+        failedRecords.length > 0
+          ? `with ${failedRecords.length} errors`
+          : "successfully"
+      }`,
+      statusCode: 200,
+      failedRecords,
+    })
   }
 
   public async updateEmployeePersonalDetails({
