@@ -9,7 +9,7 @@
 */
 import Event from '@ioc:Adonis/Core/Event'
 import CompanyService from 'App/Services/CompanyService'
-import EmployeeService from 'App/Services/EmployeeService'
+// import EmployeeService from 'App/Services/EmployeeService'
 import UserService from 'App/Services/UserService'
 
 Event.on('mail:sent', async ({ message }) => {
