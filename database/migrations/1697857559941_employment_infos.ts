@@ -8,7 +8,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
       table.string('employee_id').nullable().unique()
-      table.uuid('user_id').notNullable()
+      table.uuid('user_id').notNullable().references('id').inTable('users').onDelete('CASCADE')
       table.uuid('employment_type_id').nullable()
       table.uuid('department_id').nullable()
       table.string('position').nullable()

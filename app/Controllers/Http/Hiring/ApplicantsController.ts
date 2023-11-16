@@ -10,9 +10,14 @@ export default class ApplicantsController {
   public async getAllApplicants({ request, response }: HttpContextContract) {
     const page = request.input('page', 1)
     const perPage = request.input('perPage', 10)
+    const companyId = request.input('companyId', request.tenant.id)
+
+    const vacancies = await Vacancy.query().where('companyId', companyId).select('id')
+    const vacancyIds = vacancies.map((vacancy) => vacancy.id)
 
     const applicants = await Applicant.query()
       .where('isDeleted', false)
+      .whereIn('vacancy_id', vacancyIds)
       .orderBy('createdAt', 'desc')
       .preload('vacancy')
       .paginate(page, perPage)
@@ -61,19 +66,22 @@ export default class ApplicantsController {
       resumeUrl,
     } = validatedBody
 
-    await Applicant.create({
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      address,
-      city,
-      stateId,
-      countryId,
-      resumeUrl,
-      vacancyId: vacancy.id,
-      status: Statuses.PENDING,
-    })
+    await Applicant.firstOrCreate(
+      { email, vacancyId: vacancy.id },
+      {
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        address,
+        city,
+        stateId,
+        countryId,
+        resumeUrl,
+        vacancyId: vacancy.id,
+        status: Statuses.PENDING,
+      }
+    )
 
     return response.ok({
       status: 'Created',

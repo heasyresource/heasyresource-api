@@ -5,7 +5,8 @@
     "@adonisjs/core/build/commands/index.js",
     "@adonisjs/repl/build/commands",
     "@adonisjs/lucid/build/commands",
-    "@adonisjs/mail/build/commands"
+    "@adonisjs/mail/build/commands",
+    "@rlanz/bull-queue/build/commands"
   ],
   "exceptionHandlerNamespace": "App/Exceptions/Handler",
   "aliases": {
@@ -27,7 +28,8 @@
     "adonis5-jwt",
     "@adonisjs/mail",
     "@adonisjs/view",
-    "@adonisjs/lucid-slugify"
+    "@adonisjs/lucid-slugify",
+    "@rlanz/bull-queue"
   ],
   "aceProviders": [
     "@adonisjs/repl"

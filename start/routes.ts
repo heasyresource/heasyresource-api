@@ -62,6 +62,8 @@ Route.group(() => {
   // EMPLOYEE ROUTES
   Route.group(() => {
     Route.post('/employees', 'Employee/EmployeesController.addEmployee')
+    Route.post('/employees/bulk', 'Employee/EmployeesController.addBulkEmployee')
+    Route.post('/employees/bulk/retry', 'Employee/EmployeesController.retryAddBulkEmployee')
     Route.put(
       '/employees/:userId/personal-details',
       'Employee/EmployeesController.updateEmployeePersonalDetails'
@@ -104,6 +106,10 @@ Route.group(() => {
     Route.get(
       '/employees/:companyId/employee/:userId',
       'Employee/EmployeesController.fetchSingleCompanyEmployee'
+    )
+    Route.put(
+      '/employees/:userId/set-profile-picture',
+      'Employee/EmployeesController.setEmployeeProfilePicture'
     )
   }).middleware(['auth:jwt', 'subdomain'])
 

@@ -9,6 +9,7 @@
 */
 import Event from '@ioc:Adonis/Core/Event'
 import CompanyService from 'App/Services/CompanyService'
+import EmployeeService from 'App/Services/EmployeeService'
 import UserService from 'App/Services/UserService'
 
 Event.on('mail:sent', async ({ message }) => {
@@ -23,3 +24,7 @@ Event.on('new:company', async ({ companyId }) => {
   await CompanyService.addCompanyJobCategories(companyId)
   console.log('Added Leave Types, Holiday Types and Job Categories')
 })
+
+// Event.on('new:employee', async (payload) => {
+//   await EmployeeService.saveEmployee(payload)
+// })

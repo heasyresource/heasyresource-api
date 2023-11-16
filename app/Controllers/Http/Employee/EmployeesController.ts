@@ -19,6 +19,10 @@ import WorkExperience from 'App/Models/WorkExperience'
 import LicenseOrCertification from 'App/Models/LicenseOrCertification'
 import EmployeeWorkExperienceValidator from 'App/Validators/EmployeeWorkExperienceValidator'
 import EmployeeLicenseOrCertificationValidator from 'App/Validators/EmployeeLicenseOrCertificationValidator'
+import * as fs from 'fs'
+import { parseStream } from 'fast-csv'
+import Application from '@ioc:Adonis/Core/Application'
+import UrlValidator from 'App/Validators/UrlValidator'
 
 export default class EmployeesController {
   public async addEmployee({ request, response }: HttpContextContract) {
@@ -73,6 +77,7 @@ export default class EmployeesController {
       user.roleId = employeeRole.id
       user.companyId = request.tenant.id
       user.logoUrl = logoUrl
+      user.isDefaultPassword = true
 
       user.useTransaction(trx)
       await user.save()
@@ -99,6 +104,65 @@ export default class EmployeesController {
       status: 'Created',
       message: 'Added employee successfully.',
       statusCode: 201,
+    })
+  }
+
+  public async addBulkEmployee({ request, response }: HttpContextContract) {
+    const employeesFile = request.file('employees', {
+      size: '1',
+      extnames: ['csv'],
+    })
+
+    const employeesFileURL = await EmployeeService.uploadFile(employeesFile)
+    const employees: any = []
+
+    if (employeesFileURL) {
+      return new Promise((resolve, reject) => {
+        const stream = fs.createReadStream(Application.tmpPath() + '/' + employeesFileURL)
+
+        parseStream(stream, { headers: true, ignoreEmpty: true, maxRows: 10, trim: true })
+          .on('error', (error) => console.error(error))
+          .on('data', (row) => {
+            employees.push(row)
+          })
+          .on('end', async (rowCount: number) => {
+            console.log(`Parsed ${rowCount} rows`)
+            EmployeeService.bulkCreate(employees, response, request)
+              .then((failedRecords) => {
+                resolve({
+                  status: 'Success',
+                  message: `Employees uploaded ${
+                    failedRecords.length > 0
+                      ? `with ${failedRecords.length} errors.`
+                      : "successfully."
+                  }`,
+                  statusCode: 200,
+                  failedRecords,
+                })
+              })
+              .catch((err) => {
+                console.error(err.messages)
+                reject(err)
+              })
+          })
+      })
+    }
+  }
+
+  public async retryAddBulkEmployee({ request, response }: HttpContextContract) {
+    const { employees } = request.body()
+
+    const failedRecords = await EmployeeService.bulkCreate(employees, response, request)
+
+    return response.ok({
+      status: 'Success',
+      message: `Employees uploaded ${
+        failedRecords.length > 0
+          ? `with ${failedRecords.length} errors`
+          : "successfully"
+      }`,
+      statusCode: 200,
+      failedRecords,
     })
   }
 
@@ -298,21 +362,10 @@ export default class EmployeesController {
     params: { companyId, userId },
     response,
   }: HttpContextContract) {
-    const employeeRole = await Role.findBy('name', Roles.EMPLOYEE)
-
-    if (!employeeRole) {
-      return response.badRequest({
-        status: 'Bad Request',
-        message: 'Error occured fetching employee.',
-        statusCode: 400,
-      })
-    }
-
     const employee = await User.query()
       .where('id', userId)
       .where('companyId', companyId)
       .where('isDeleted', false)
-      .where('roleId', employeeRole.id)
       .preload('role')
       .preload('company')
       .preload('employmentInfo', (builder) => {
@@ -442,7 +495,6 @@ export default class EmployeesController {
         name,
         issuingOrganization,
         issueDate,
-        expirationDate,
       },
       {
         userId,
@@ -522,6 +574,26 @@ export default class EmployeesController {
       status: 'Success',
       message: 'Updated employee license successfully',
       statusCode: '200',
+    })
+  }
+
+  public async setEmployeeProfilePicture({
+    request,
+    response,
+    params: { userId },
+  }: HttpContextContract) {
+    const validatedBody = await request.validate(UrlValidator)
+
+    const { url } = validatedBody
+
+    const user = await User.findByOrFail('id', userId)
+    user.logoUrl = url
+    await user.save()
+
+    return response.ok({
+      status: 'Success',
+      message: 'Uploaded profile picture successfully.',
+      statusCode: 200,
     })
   }
 }
