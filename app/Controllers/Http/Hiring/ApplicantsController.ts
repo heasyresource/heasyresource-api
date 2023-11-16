@@ -11,6 +11,10 @@ export default class ApplicantsController {
     const page = request.input('page', 1)
     const perPage = request.input('perPage', 10)
 
+    const vacancies = await Vacancy.query()
+    .select('id')
+    .where('companyId', request.tenant.id)
+
     const applicants = await Applicant.query()
       .where('isDeleted', false)
       .orderBy('createdAt', 'desc')
@@ -61,19 +65,22 @@ export default class ApplicantsController {
       resumeUrl,
     } = validatedBody
 
-    await Applicant.create({
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      address,
-      city,
-      stateId,
-      countryId,
-      resumeUrl,
-      vacancyId: vacancy.id,
-      status: Statuses.PENDING,
-    })
+    await Applicant.firstOrCreate(
+      { email, vacancyId: vacancy.id },
+      {
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        address,
+        city,
+        stateId,
+        countryId,
+        resumeUrl,
+        vacancyId: vacancy.id,
+        status: Statuses.PENDING,
+      }
+    )
 
     return response.ok({
       status: 'Created',

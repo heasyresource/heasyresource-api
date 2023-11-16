@@ -106,6 +106,10 @@ Route.group(() => {
       '/employees/:companyId/employee/:userId',
       'Employee/EmployeesController.fetchSingleCompanyEmployee'
     )
+    Route.put(
+      '/employees/:userId/set-profile-picture',
+      'Employee/EmployeesController.setEmployeeProfilePicture'
+    )
   }).middleware(['auth:jwt', 'subdomain'])
 
   // COMPANIES ROUTES
