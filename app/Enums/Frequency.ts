@@ -1,7 +1,7 @@
 enum Frequency {
   MONTHLY = 'Monthly',
   QUARTERLY = 'Quarterly',
-  ANUALLY = 'Anually',
+  ANNUALLY = 'Annually',
 }
 
 export default Frequency

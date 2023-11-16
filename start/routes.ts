@@ -184,4 +184,13 @@ Route.group(() => {
     )
     Route.put('/applicants/:applicantId/reject', 'Hiring/ApplicantsController.rejectApplicant')
   }).middleware(['auth:jwt', 'subdomain'])
+
+  Route.group(() => {
+    Route.get('/components', 'Compensation/ComponentsController.fetchAllComponents')
+    Route.get('/components', 'Compensation/ComponentsController.getComponentById')
+    Route.post('/components', 'Compensation/ComponentsController.createComponent')
+    Route.put('/components', 'Compensation/ComponentsController.updateComponent')
+    Route.delete('/components', 'Compensation/ComponentsController.deleteComponent')
+    Route.post('/components', 'Compensation/ComponentsController.addComponentsToUser')
+  }).middleware(['auth:jwt', 'subdomain'])
 }).prefix('/api/v1')

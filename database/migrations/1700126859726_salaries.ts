@@ -8,8 +8,8 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
       table.uuid('user_id').references('id').inTable('users').onDelete('CASCADE')
-      table.decimal('gross_salary').notNullable()
-      table.enum('frequency', [Frequency.ANUALLY, Frequency.MONTHLY, Frequency.QUARTERLY])
+      table.decimal('gross_salary', 19, 4).notNullable()
+      table.enum('frequency', [Frequency.ANNUALLY, Frequency.MONTHLY, Frequency.QUARTERLY])
       table.string('currency').notNullable()
       table.boolean('is_deleted').notNullable().defaultTo(false)
       table.timestamps(true, true)
