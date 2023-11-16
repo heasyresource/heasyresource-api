@@ -172,6 +172,7 @@ export default class EmployeeService {
           workEmail,
           phoneNumber,
           gender,
+          dateOfBirth
         } = validatedBody
 
         const employeeRole = await Role.findBy('name', Roles.EMPLOYEE)
@@ -210,6 +211,7 @@ export default class EmployeeService {
           department,
           employeeIdFormat: request.tenant.employeeIdFormat,
           companyName: request.tenant.name,
+          dateOfBirth
         }
         Queue.dispatch('App/Jobs/AddEmployee', payload)
       }
@@ -234,6 +236,7 @@ export default class EmployeeService {
       department,
       employeeIdFormat,
       companyName,
+      dateOfBirth
     } = payload
 
     await Database.transaction(async (trx) => {
@@ -244,6 +247,7 @@ export default class EmployeeService {
       user.email = workEmail
       user.phoneNumber = phoneNumber
       user.gender = gender
+      user.dateOfBirth = dateOfBirth
       user.password = generatedPassword
       user.isActive = true
       user.isVerified = true
