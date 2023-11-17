@@ -84,7 +84,7 @@ export default class Applicant extends BaseModel {
 
   @belongsTo(() => Vacancy, {
     onQuery: (query) => {
-      query.select('title')
+      query.select('title', 'hiringManager')
     },
   })
   public vacancy: BelongsTo<typeof Vacancy>
