@@ -10,8 +10,27 @@ export default class VacanciesController {
     const page = request.input('page', 1)
     const perPage = request.input('perPage', 10)
     const companyId = request.input('companyId', request.tenant.id)
+    const { isActive, isPublished, employmentTypeId, jobCategoryId, workMode, search } = request.qs()
 
     const vacancies = await Vacancy.query()
+      .if(search, (query) => {
+        query.whereILike('title', `%${search}%`)
+      })
+      .if(isActive, (query) => {
+        query.where('isActive', isActive)
+      })
+      .if(isPublished, (query) => {
+        query.where('isPublished', isPublished)
+      })
+      .if(employmentTypeId, (query) => {
+        query.where('employmentTypeId', employmentTypeId)
+      })
+      .if(jobCategoryId, (query) => {
+        query.where('jobCategoryId', jobCategoryId)
+      })
+      .if(workMode, (query) => {
+        query.where('workMode', workMode)
+      })
       .where('companyId', companyId)
       .where('isDeleted', false)
       .orderBy('createdAt', 'desc')

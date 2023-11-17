@@ -10,6 +10,7 @@ export default class UserLeavesController {
     const page = request.input('page', 1)
     const perPage = request.input('perPage', 10)
     const companyId = request.input('companyId', request.tenant.id)
+    const { status, leaveTypeId } = request.qs()
 
     const users = await User.query().where('companyId', companyId).select('id')
     const userIds = users.map((user) => user.id)
@@ -17,6 +18,12 @@ export default class UserLeavesController {
     const employeeLeaves = await UserLeave.query()
       .whereIn('userId', userIds)
       .where('isDeleted', false)
+      .if(status, (query) => {
+        query.where('status', status)
+      })
+      .if(leaveTypeId, (query) => {
+        query.where('leaveTypeId', leaveTypeId)
+      })
       .preload('user')
       .preload('leaveType')
       .orderBy('createdAt', 'desc')
