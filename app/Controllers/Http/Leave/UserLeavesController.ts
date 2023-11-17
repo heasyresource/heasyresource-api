@@ -139,6 +139,34 @@ export default class UserLeavesController {
       statusCode: 200,
     })
   }
+
+  public async fetchEmployeeLeaves({ request, response, auth }: HttpContextContract) {
+    const user = await auth.use('jwt').authenticate()
+
+    const page = request.input('page', 1)
+    const perPage = request.input('perPage', 10)
+    const { status, leaveTypeId } = request.qs()
+
+    const employeeLeaves = await UserLeave.query()
+      .where('userId', user.id)
+      .where('isDeleted', false)
+      .if(status, (query) => {
+        query.where('status', status)
+      })
+      .if(leaveTypeId, (query) => {
+        query.where('leaveTypeId', leaveTypeId)
+      })
+      .preload('leaveType')
+      .orderBy('createdAt', 'desc')
+      .paginate(page, perPage)
+
+    return response.ok({
+      status: 'Success',
+      message: 'Fetched employee leaves successfully.',
+      statusCode: 200,
+      results: employeeLeaves,
+    })
+  }
 }
 
 module.exports = UserLeavesController
