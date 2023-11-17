@@ -119,6 +119,7 @@ Route.group(() => {
     Route.get('/companies/:companyId', 'Company/CompaniesController.getCompanyById')
     Route.get('/companies', 'Company/CompaniesController.fetchAllCompanies')
     Route.put('/companies/:companyId/status', 'Company/CompaniesController.updateCompanyStatus')
+    Route.put('/companies/:companyId', 'Company/CompaniesController.updateCompanyDetails')
   }).middleware(['auth:jwt'])
 
   // METADATA ROUTE
