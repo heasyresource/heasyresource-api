@@ -25,6 +25,8 @@ export default class UserLeavesController {
         query.where('leaveTypeId', leaveTypeId)
       })
       .preload('user')
+      .preload('approvedByDetails')
+      .preload('rejectedByDetails')
       .preload('leaveType')
       .orderBy('createdAt', 'desc')
       .paginate(page, perPage)
@@ -157,6 +159,8 @@ export default class UserLeavesController {
         query.where('leaveTypeId', leaveTypeId)
       })
       .preload('leaveType')
+      .preload('approvedByDetails')
+      .preload('rejectedByDetails')
       .orderBy('createdAt', 'desc')
       .paginate(page, perPage)
 

@@ -1,6 +1,6 @@
-enum Types {
+enum ComponentTypes {
   EARNINGS = 'Earnings',
   DEDUCTIONS = 'Deductions',
 }
 
-export default Types
+export default ComponentTypes

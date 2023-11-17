@@ -199,10 +199,10 @@ Route.group(() => {
 
   Route.group(() => {
     Route.get('/components', 'Compensation/ComponentsController.fetchAllComponents')
-    Route.get('/components', 'Compensation/ComponentsController.getComponentById')
+    Route.get('/components/:componentId', 'Compensation/ComponentsController.getComponentById')
     Route.post('/components', 'Compensation/ComponentsController.createComponent')
-    Route.put('/components', 'Compensation/ComponentsController.updateComponent')
-    Route.delete('/components', 'Compensation/ComponentsController.deleteComponent')
-    Route.post('/components', 'Compensation/ComponentsController.addComponentsToUser')
+    Route.put('/components/:componentId', 'Compensation/ComponentsController.updateComponent')
+    Route.delete('/components/:componentId', 'Compensation/ComponentsController.deleteComponent')
+    // Route.post('/components', 'Compensation/ComponentsController.addComponentsToUser')
   }).middleware(['auth:jwt', 'subdomain'])
 }).prefix('/api/v1')

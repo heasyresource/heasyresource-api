@@ -1,6 +1,6 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 import Frequency from 'App/Enums/Frequency'
-import Types from 'App/Enums/Types'
+import ComponentTypes from 'App/Enums/ComponentTypes'
 
 export default class extends BaseSchema {
   protected tableName = 'components'
@@ -9,11 +9,11 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
       table.string('name').notNullable()
-      table.enum('type', [Types.DEDUCTIONS, Types.EARNINGS])
+      table.enum('type', [ComponentTypes.DEDUCTIONS, ComponentTypes.EARNINGS])
       table.uuid('company_id').notNullable()
-      table.boolean('is_fixed').notNullable()
-      table.string('rate').notNullable()
-      table.decimal('amount', 19, 4).notNullable()
+      table.boolean('is_fixed').notNullable().defaultTo(false)
+      table.string('rate').nullable()
+      table.decimal('amount', 19, 4).nullable()
       table.enum('frequency', [Frequency.ANNUALLY, Frequency.MONTHLY, Frequency.QUARTERLY])
       table.text('comments').nullable()
       table.boolean('is_deleted').notNullable().defaultTo(false)

@@ -1,6 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Component from 'App/Models/Component'
-import UserComponent from 'App/Models/UserComponent'
+// import UserComponent from 'App/Models/UserComponent'
 // import AddUserToComponentValidator from 'App/Validators/AddUserToComponentValidator'
 import ComponentValidator from 'App/Validators/ComponentValidator'
 
@@ -9,12 +9,21 @@ export default class ComponentsController {
     const page = request.input('page', 1)
     const perPage = request.input('perPage', 10)
     const companyId = request.input('companyId', request.tenant.id)
+    const paginate = request.input('paginate', true)
 
-    const components = await Component.query()
-      .where('companyId', companyId)
-      .where('isDeleted', false)
-      .orderBy('createdAt', 'desc')
-      .paginate(page, perPage)
+    let components
+    if (paginate === 'false' || paginate === false) {
+      components = await Component.query()
+        .where('companyId', companyId)
+        .where('isDeleted', false)
+        .orderBy('createdAt', 'desc')
+    } else {
+      components = await Component.query()
+        .where('companyId', companyId)
+        .where('isDeleted', false)
+        .orderBy('createdAt', 'desc')
+        .paginate(page, perPage)
+    }
 
     return response.ok({
       status: 'Success',
@@ -107,24 +116,26 @@ export default class ComponentsController {
     })
   }
 
-  public async addComponentsToUser({
-    request,
-    response,
-    params: { userId, componentsId },
-  }: HttpContextContract) {
-    // const validatedBody = await request.validate(AddUserToComponentValidator)
+//   public async addComponentsToUser({
+//     request,
+//     response,
+//     params: { userId },
+//   }: HttpContextContract) {
+//     // const validatedBody = await request.validate(AddUserToComponentValidator)
 
-    componentsId.map(async (id: string) => {
-      await UserComponent.create({
-        userId,
-        id,
-      })
-    })
+//   //  const payload = componentsId.map(id) => {
 
-    return response.created({
-      status: 'Created',
-      message: 'Created User component successfully',
-      statusCode: 201,
-    })
-  }
+//   //   })
+
+//   //   await UserComponent.createMany({
+//   //     userId,
+//   //     id,
+//   //   })
+
+//     return response.created({
+//       status: 'Created',
+//       message: 'Created User component successfully',
+//       statusCode: 201,
+//     })
+//   }
 }
