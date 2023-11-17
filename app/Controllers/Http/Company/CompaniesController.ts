@@ -84,13 +84,39 @@ export default class CompaniesController {
 
     const validatedBody = await request.validate(UpdateCompanyValidator)
 
-    company.merge(validatedBody).save()
+    const {
+      address,
+      countryId,
+      emailDomain,
+      companySizeId,
+      autoGenerateEmployeeId,
+      employeeIdFormat,
+      logoUrl,
+      companyEmail: email,
+      companyWebsite: website,
+      industryId,
+      companyPhoneNumber: phoneNumber,
+    } = validatedBody
+    await company
+      .merge({
+        address,
+        countryId,
+        emailDomain,
+        companySizeId,
+        autoGenerateEmployeeId,
+        employeeIdFormat: JSON.stringify(employeeIdFormat),
+        logoUrl,
+        email,
+        website,
+        industryId,
+        phoneNumber,
+      })
+      .save()
 
     return response.ok({
       status: 'Success',
       message: 'Updated company successfully.',
-      statusCode: 200,
-      results: company,
+      statusCode: 200
     })
   }
 }
