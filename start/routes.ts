@@ -48,7 +48,10 @@ Route.group(() => {
   Route.post('/password/forgot', 'Password/PasswordController.forgotPassword')
   Route.post('/password/verify-code', 'Password/PasswordController.verifyResetPasswordCode')
   Route.put('/password/reset', 'Password/PasswordController.resetPassword')
-  // }).middleware(['subdomain'])
+
+  Route.group(() => {
+    Route.put('/password/change', 'Password/PasswordController.changePassword')
+  }).middleware(['auth:jwt'])
 
   // DEPARTMENTS ROUTES
   Route.group(() => {
