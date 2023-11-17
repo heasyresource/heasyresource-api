@@ -23,6 +23,7 @@ import * as fs from 'fs'
 import { parseStream } from 'fast-csv'
 import Application from '@ioc:Adonis/Core/Application'
 import UrlValidator from 'App/Validators/UrlValidator'
+import EmploymentStatuses from 'App/Enums/EmploymentStatuses'
 
 export default class EmployeesController {
   public async addEmployee({ request, response }: HttpContextContract) {
@@ -62,7 +63,7 @@ export default class EmployeesController {
       charset: ['alphanumeric', '?', '@', '!'],
     })
 
-    // console.log({ generatedPassword })
+    console.log({ generatedPassword })
 
     await Database.transaction(async (trx) => {
       const user = new User()
@@ -88,6 +89,7 @@ export default class EmployeesController {
       employmentInfo.userId = user.id
       employmentInfo.position = position
       employmentInfo.departmentId = departmentId
+      employmentInfo.status = EmploymentStatuses.EMPLOYED
       employmentInfo.employeeId = !request.tenant.autoGenerateEmployeeId
         ? employeeID
         : await EmployeeService.generateEmployeeId(
@@ -134,7 +136,7 @@ export default class EmployeesController {
                   message: `Employees uploaded ${
                     failedRecords.length > 0
                       ? `with ${failedRecords.length} errors.`
-                      : "successfully."
+                      : 'successfully.'
                   }`,
                   statusCode: 200,
                   failedRecords,
@@ -157,9 +159,7 @@ export default class EmployeesController {
     return response.ok({
       status: 'Success',
       message: `Employees uploaded ${
-        failedRecords.length > 0
-          ? `with ${failedRecords.length} errors`
-          : "successfully"
+        failedRecords.length > 0 ? `with ${failedRecords.length} errors` : 'successfully'
       }`,
       statusCode: 200,
       failedRecords,
@@ -325,6 +325,7 @@ export default class EmployeesController {
   }: HttpContextContract) {
     const page = request.input('page', 1)
     const perPage = request.input('perPage', 10)
+    const { search, departmentId, status, employeeId } = request.qs()
 
     const employeeRole = await Role.findBy('name', Roles.EMPLOYEE)
 
@@ -336,7 +337,33 @@ export default class EmployeesController {
       })
     }
 
+    let userIds
+    if (departmentId || status || employeeId) {
+      const usersWithDepartmentId = await EmploymentInfo.query()
+        .if(departmentId, (query) => {
+          query.where('departmentId', departmentId)
+        })
+        .if(status, (query) => {
+          query.where('status', status)
+        })
+        .if(employeeId, (query) => {
+          query.whereILike('employeeId', `%${employeeId}%`)
+        })
+        .select('userId')
+      userIds = usersWithDepartmentId.map((user) => user.userId)
+    }
+
     const employees = await User.query()
+      .if(search, (query) => {
+        query.where((q) => {
+          q.whereILike('firstName', `%${search}%`)
+            .orWhereILike('lastName', `%${search}%`)
+            .orWhereILike('middleName', `%${search}%`)
+        })
+      })
+      .if(userIds, (query) => {
+        query.whereIn('id', userIds)
+      })
       .where('companyId', companyId)
       .where('isDeleted', false)
       .where('roleId', employeeRole.id)

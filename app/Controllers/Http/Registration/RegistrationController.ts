@@ -12,6 +12,7 @@ import CompleteCompanyRegistrationValidator from 'App/Validators/CompleteCompany
 import RegistrationValidator from 'App/Validators/RegistrationValidator'
 import randomstring from 'randomstring'
 import Event from '@ioc:Adonis/Core/Event'
+import EmploymentStatuses from 'App/Enums/EmploymentStatuses'
 
 export default class RegistrationController {
   public async register({ request, response }: HttpContextContract) {
@@ -70,6 +71,7 @@ export default class RegistrationController {
       const employmentInfo = new EmploymentInfo()
       employmentInfo.userId = user.id
       employmentInfo.position = position
+      employmentInfo.status = EmploymentStatuses.EMPLOYED;
       // employmentInfo.employeeId = 'HR-' + randomstring.generate({
       //   length: 6,
       //   charset: 'alphanumeric',
@@ -138,6 +140,9 @@ export default class RegistrationController {
     company.employeeIdFormat = JSON.stringify(employeeIdFormat)
     company.isCompletedRegistration = true
     await company.save()
+
+
+    // TODO Auto generate employee id
 
     return response.ok({
       status: 'Success',

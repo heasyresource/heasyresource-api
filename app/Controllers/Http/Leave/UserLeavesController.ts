@@ -101,6 +101,37 @@ export default class UserLeavesController {
       statusCode: 200,
     })
   }
+
+  public async requestLeave({ request, response, auth }: HttpContextContract) {
+    const user = await auth.use('jwt').authenticate()
+
+    const validatedBody = await request.validate(AssignLeaveValidator)
+
+    const { leaveTypeId, startDate, endDate, comments } = validatedBody
+
+    await UserLeave.firstOrCreate(
+      {
+        userId: user.id,
+        leaveTypeId,
+        startDate,
+        endDate,
+      },
+      {
+        userId: user.id,
+        leaveTypeId,
+        startDate,
+        endDate,
+        comments,
+        status: Statuses.PENDING,
+      }
+    )
+
+    return response.ok({
+      status: 'Success',
+      message: 'Request leave successfully.',
+      statusCode: 200,
+    })
+  }
 }
 
 module.exports = UserLeavesController

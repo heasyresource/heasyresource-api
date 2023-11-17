@@ -11,11 +11,25 @@ export default class ApplicantsController {
     const page = request.input('page', 1)
     const perPage = request.input('perPage', 10)
     const companyId = request.input('companyId', request.tenant.id)
+    const { search, status, vacancyId } = request.qs()
 
-    const vacancies = await Vacancy.query().where('companyId', companyId).select('id')
+    const vacancies = await Vacancy.query()
+      .if(vacancyId, (query) => {
+        query.where('id', vacancyId)
+      })
+      .where('companyId', companyId)
+      .select('id')
     const vacancyIds = vacancies.map((vacancy) => vacancy.id)
 
     const applicants = await Applicant.query()
+      .if(search, (query) => {
+        query.where((q) => {
+          q.whereILike('firstName', `%${search}%`).orWhereILike('lastName', `%${search}%`)
+        })
+      })
+      .if(status, (query) => {
+        query.where('status', status)
+      })
       .where('isDeleted', false)
       .whereIn('vacancy_id', vacancyIds)
       .orderBy('createdAt', 'desc')
