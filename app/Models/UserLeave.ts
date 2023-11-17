@@ -79,4 +79,20 @@ export default class UserLeave extends BaseModel {
     },
   })
   public leaveType: BelongsTo<typeof LeaveType>
+
+  @belongsTo(() => User, {
+    foreignKey: 'approvedBy',
+    onQuery: (query) => {
+      query.select('firstName', 'lastName')
+    },
+  })
+  public approvedByDetails: BelongsTo<typeof User>
+
+  @belongsTo(() => User, {
+    foreignKey: 'rejectedBy',
+    onQuery: (query) => {
+      query.select('firstName', 'lastName')
+    },
+  })
+  public rejectedByDetails: BelongsTo<typeof User>
 }
