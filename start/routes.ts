@@ -150,6 +150,7 @@ Route.group(() => {
     Route.post('/employee/:userId/leaves/assign', 'Leave/UserLeavesController.assignLeave')
     Route.put('/employee/leaves/:userleaveId/approve', 'Leave/UserLeavesController.approveLeave')
     Route.put('/employee/leaves/:userleaveId/reject', 'Leave/UserLeavesController.rejectLeave')
+    Route.post('/employee/leaves/request', 'Leave/UserLeavesController.requestLeave')
   }).middleware(['auth:jwt', 'subdomain'])
 
   // JOB CATEGORY ROUTES
