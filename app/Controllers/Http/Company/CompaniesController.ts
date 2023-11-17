@@ -35,8 +35,18 @@ export default class CompaniesController {
   public async fetchAllCompanies({ request, response }: HttpContextContract) {
     const page = request.input('page', 1)
     const perPage = request.input('perPage', 10)
+    const { search, status } = request.qs()
+
+    const defaultCompany = 'Heasy Resource';
 
     const companies = await Company.query()
+      .if(search, (query) => {
+        query.whereILike('name', `%${search}%`)
+      })
+      .if(status, (query) => {
+        query.where('status', status)
+      })
+      .whereNot('name', defaultCompany)
       .where('isDeleted', false)
       .preload('country')
       .preload('companySize')
@@ -116,7 +126,7 @@ export default class CompaniesController {
     return response.ok({
       status: 'Success',
       message: 'Updated company successfully.',
-      statusCode: 200
+      statusCode: 200,
     })
   }
 }
