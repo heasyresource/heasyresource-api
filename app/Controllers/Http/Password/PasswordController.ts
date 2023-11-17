@@ -9,6 +9,7 @@ import Hash from '@ioc:Adonis/Core/Hash'
 import VerifyResetPasswordValidator from 'App/Validators/VerifyResetPasswordValidator'
 import Role from 'App/Models/Role'
 import Roles from 'App/Enums/Roles'
+import ChangePasswordValidator from 'App/Validators/ChangePasswordValidator'
 
 const verificationCodeValidity = Env.get('VERIFICATION_CODE_EXPIRY_TIME_IN_MS', 600000)
 const verificationCodeWaitTime = Env.get('VERIFICATION_CODE_RETRY_TIME_IN_MS', 60000)
@@ -187,5 +188,39 @@ export default class PasswordController {
         statusCode: 400,
       })
     }
+  }
+
+  public async changePassword({ response, request, auth }: HttpContextContract) {
+    const validatedBody = await request.validate(ChangePasswordValidator)
+
+    const { newPassword, currentPassword } = validatedBody
+
+    const user = await auth.use('jwt').authenticate()
+
+    if (!(await Hash.verify(user.password, currentPassword))) {
+      return response.badRequest({
+        status: 'Bad Request',
+        message: 'Current password is incorrect.',
+        statusCode: 400,
+      })
+    }
+
+    if (await Hash.verify(user.password, newPassword)) {
+      return response.badRequest({
+        status: 'Bad Request',
+        message: 'Current password and new password can not be the same.',
+        statusCode: 400,
+      })
+    }
+
+    user.password = newPassword
+    user.isDefaultPassword = false
+    await user.save()
+
+    return response.created({
+      status: 'Created',
+      message: 'Changed password successfully.',
+      statusCode: 201,
+    })
   }
 }
