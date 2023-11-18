@@ -24,7 +24,7 @@ import { parseStream } from 'fast-csv'
 import Application from '@ioc:Adonis/Core/Application'
 import UrlValidator from 'App/Validators/UrlValidator'
 import EmploymentStatuses from 'App/Enums/EmploymentStatuses'
-// import AddEmloyeeEmail from 'App/Mailers/AddEmloyeeEmail'
+import AddEmloyeeEmail from 'App/Mailers/AddEmloyeeEmail'
 
 export default class EmployeesController {
   public async addEmployee({ request, response }: HttpContextContract) {
@@ -101,7 +101,7 @@ export default class EmployeesController {
       await employmentInfo.save()
 
       user.password = generatedPassword
-      // await new AddEmloyeeEmail(user, request.tenant).sendLater()
+      await new AddEmloyeeEmail(user, request.tenant).sendLater()
     })
 
     return response.created({

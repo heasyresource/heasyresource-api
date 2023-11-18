@@ -5,7 +5,7 @@ import Company from 'App/Models/Company'
 import Applicant from 'App/Models/Applicant'
 import Vacancy from 'App/Models/Vacancy'
 
-export default class JobApplicationEmail extends BaseMailer {
+export default class ShortlistOrRejectApplicantEmail extends BaseMailer {
   constructor(
     private applicant: Applicant,
     private company: Company,
@@ -14,20 +14,20 @@ export default class JobApplicationEmail extends BaseMailer {
     super()
   }
   public prepare(message: MessageContract) {
-    const { firstName, lastName, email } = this.applicant
+    const { firstName, lastName, email, status } = this.applicant
     const { name, logoUrl } = this.company
     const { title } = this.vacancy
     const noReplyMailFrom = Env.get('NOREPLY_MAIL_FROM', 'noreply@heasyresource.com')
 
     message
-      .subject(`${title} - Application Submitted`)
+      .subject(`Your application to ${title} at ${name}`)
       .from(noReplyMailFrom, name)
       .to(email, `${firstName} ${lastName}`)
-      .htmlView('emails/job_application', {
+      .htmlView('emails/shortlist_reject_applicant', {
         companyName: name,
         applicantFirstName: firstName,
-        jobTitle: title,
-        companyLogo: logoUrl
+        status,
+        companyLogo: logoUrl,
       })
   }
 }

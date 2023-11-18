@@ -16,7 +16,7 @@ export default class AddEmloyeeEmail extends BaseMailer {
 
     const { name, subdomain, email: companyEmail, logoUrl } = this.company
     const noReplyMailFrom = Env.get('NOREPLY_MAIL_FROM', 'noreply@heasyresource.com')
-    // const AppName = Env.get('APP_NAME', 'HeasyResource')
+
     message
       .subject(`Welcome to ${name} EMS`)
       .from(noReplyMailFrom, name)

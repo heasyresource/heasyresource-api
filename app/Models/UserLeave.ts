@@ -68,7 +68,7 @@ export default class UserLeave extends BaseModel {
 
   @belongsTo(() => User, {
     onQuery: (query) => {
-      query.select('firstName', 'lastName')
+      query.select('firstName', 'lastName', 'email')
     },
   })
   public user: BelongsTo<typeof User>

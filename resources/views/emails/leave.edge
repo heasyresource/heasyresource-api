@@ -1,4 +1,4 @@
-@layout('emails/email_base')
+@layout('emails/custom_email_base')
 @section('email_body')
 
 <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="transparent" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
@@ -24,91 +24,44 @@
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
 
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">Dear Raphael Fadimu,</span></p>
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>                      
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                            style="font-family: 'Open Sans', sans-serif; font-size: 14px">I hope this message finds you well. I wanted to inform you about the status of your recent [Leave Type] request, which was submitted for the period [Start Date] to [End Date].</span></p>
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
-
-                      <p style="font-size: 20px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px"><strong>Leave Details:</strong></span></p>
-
-                      <ul style="font-size: 15px; font-family: Ubuntu, Helvetica, Arial">
-
-                            <li style="font-family: 'Open Sans', sans-serif; font-size: 14px">
-                                Leave Type: <span style="font-family: 'Open Sans', sans-serif; font-size: 14px">{Leave Type}</span>
-                            </li>
-
-                            <li style="font-family: 'Open Sans', sans-serif; font-size: 14px">
-                                Start Date: <span style="font-family: 'Open Sans', sans-serif; font-size: 14px">{Start Date}</span>
-                            </li>
-
-                            <li style="font-family: 'Open Sans', sans-serif; font-size: 14px">
-                                End Date: <span style="font-family: 'Open Sans', sans-serif; font-size: 14px">{End Date}</span>
-                            </li>
-
-                            <li style="font-family: 'Open Sans', sans-serif; font-size: 14px">
-                                Total Days: <span style="font-family: 'Open Sans', sans-serif; font-size: 14px">{Total Days}</span>
-                            </li>
-
-                      </ul>
+                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">Dear {{employeeFirstName}}
+                          {{employeeLastName}},</span></p>
 
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
 
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px"><strong>Approval status: {Approved / Rejected}</strong></span></p>
-                      
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px"><strong>Comments/Reason (if applicable):</strong></span></p>
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                            style="font-family: 'Open Sans', sans-serif; font-size: 14px">{Provide any additional comments or reasons for the decision}</span></p>
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
-                    
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                            style="font-family: 'Open Sans', sans-serif; font-size: 14px">If your leave has been approved, please ensure you plan accordingly and inform your team about your absence. If it has been rejected, we understand that this might cause inconvenience, and we appreciate your understanding.</span></p>
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
-                    
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">If you have any questions or need further clarification, feel free to reach out to {Leave Approver's Name} at {Leave Approver's Email}.</span></p>
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
-                    
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">Thank you for your understanding, and we appreciate your commitment to Drifty Inc.</span></p>
-
+                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">Your recent leave request
+                          ({{leaveType}}), which was
+                          submitted for the period {{startDate}} to {{endDate}} has been {{status}}.</span></p>
 
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
 
-                        
-                      {{--  <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px">Thank you for choosing HeasyResource!</span></p>  --}}
+
+                      @if(status === 'Approved')
+                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
+                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">Please ensure you plan
+                          accordingly and inform your team about your absence.</span></p>
+                      @else
+                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
+                          style="font-family: 'Open Sans', sans-serif; font-size: 14px"><strong>Reason for rejection:
+                          </strong>{{reasonForRejection}}</span></p>
+
+                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
+
+                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
+                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">We understand that this might
+                          cause inconvenience and we appreciate your
+                          understanding.</span></p>
+                      @end
+                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
+
 
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><br /><span
                           style="font-family: 'Open Sans', sans-serif; font-size: 14px">Best Regards,</span></p>
 
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">Raphael Fadimu</span>
+                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">{{companyName}}.</span>
                       </p>
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px">CEO,</span>
-                    </p>
-                    <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px">Drifty Inc.</span>
-                    </p>
-                    <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px"><a href="mailto:#" style="color: #0000ee">raphaelfadimu@driftyinc.com</a></span>
-                    </p>
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
                     </div>
                   </td>
