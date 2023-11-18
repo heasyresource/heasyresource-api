@@ -1,6 +1,10 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Roles from 'App/Enums/Roles'
 import Statuses from 'App/Enums/Statuses'
+import ApproveCompanyEmail from 'App/Mailers/ApproveCompanyEmail'
 import Company from 'App/Models/Company'
+import Role from 'App/Models/Role'
+import User from 'App/Models/User'
 import CompanyStatusValidator from 'App/Validators/CompanyStatusValidator'
 import UpdateCompanyValidator from 'App/Validators/UpdateCompanyValidator'
 
@@ -37,7 +41,7 @@ export default class CompaniesController {
     const perPage = request.input('perPage', 10)
     const { search, status } = request.qs()
 
-    const defaultCompany = 'Heasy Resource';
+    const defaultCompany = 'Heasy Resource'
 
     const companies = await Company.query()
       .if(search, (query) => {
@@ -75,7 +79,13 @@ export default class CompaniesController {
     await company.save()
 
     if (oldStatus === Statuses.PENDING && status === Statuses.APPROVED) {
-      // Send Mail
+      const companyAdminRole = await Role.findByOrFail('name', Roles.COMPANY_ADMIN)
+      const user = await User.query()
+        .where('companyId', company.id)
+        .where('roleId', companyAdminRole.id)
+        .firstOrFail()
+
+      await new ApproveCompanyEmail(user, company).sendLater()
     }
 
     return response.ok({

@@ -15,7 +15,13 @@ import UserService from 'App/Services/UserService'
 Event.on('mail:sent', async ({ message }) => {
   console.log(message.subject)
   const userEmail = message.to?.[0].address
-  if (userEmail) UserService.setVerificationSentTime(userEmail)
+  console.log({ userEmail })
+
+  if (
+    userEmail &&
+    (message.subject === 'Verify Your Account' || message.subject === 'Reset Your Password')
+  )
+    UserService.setVerificationSentTime(userEmail)
 })
 
 Event.on('new:company', async ({ companyId }) => {
