@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Statuses from 'App/Enums/Statuses'
+import LeaveStatusEmail from 'App/Mailers/LeaveStatusEmail'
 import User from 'App/Models/User'
 import UserLeave from 'App/Models/UserLeave'
 import AssignLeaveValidator from 'App/Validators/AssignLeaveValidator'
@@ -68,15 +69,26 @@ export default class UserLeavesController {
     })
   }
 
-  public async approveLeave({ response, params: { userleaveId }, auth }: HttpContextContract) {
+  public async approveLeave({
+    request,
+    response,
+    params: { userleaveId },
+    auth,
+  }: HttpContextContract) {
     const user = await auth.use('jwt').authenticate()
 
-    const leave = await UserLeave.query().where('id', userleaveId).firstOrFail()
+    const leave = await UserLeave.query()
+      .where('id', userleaveId)
+      .preload('leaveType')
+      .preload('user')
+      .firstOrFail()
 
     leave.status = Statuses.APPROVED
     leave.approvedBy = user.id
     leave.rejectedBy = null
     await leave.save()
+
+    await new LeaveStatusEmail(leave.user, request.tenant, leave).sendLater()
 
     return response.ok({
       status: 'Success',
@@ -97,12 +109,18 @@ export default class UserLeavesController {
 
     const { reasonForRejection } = validatedBody
 
-    const leave = await UserLeave.query().where('id', userleaveId).firstOrFail()
+    const leave = await UserLeave.query()
+      .where('id', userleaveId)
+      .preload('leaveType')
+      .preload('user')
+      .firstOrFail()
     leave.status = Statuses.REJECTED
     leave.reasonForRejection = reasonForRejection
     leave.rejectedBy = user.id
     leave.approvedBy = null
     await leave.save()
+
+    await new LeaveStatusEmail(leave.user, request.tenant, leave).sendLater()
 
     return response.ok({
       status: 'Success',

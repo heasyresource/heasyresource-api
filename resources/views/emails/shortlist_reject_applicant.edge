@@ -1,4 +1,4 @@
-@layout('emails/email_base')
+@layout('emails/custom_email_base')
 @section('email_body')
 
 <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="transparent" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
@@ -24,79 +24,35 @@
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
 
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">Dear {Applicant Name},</span></p>
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>                      
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                            style="font-family: 'Open Sans', sans-serif; font-size: 14px">I trust this message finds you well. I want to update you on the status of your recent application for the {Job Title} position at {Company Name}. We appreciate your interest and the effort you invested in the application process.</span></p>
+                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">Dear
+                          {{applicantFirstName}},</span></p>
 
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
 
-                      <p style="font-size: 20px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px"><strong>Application status:</strong></span></p>
-
-                      <ul style="font-size: 15px; font-family: Ubuntu, Helvetica, Arial">
-
-                        <li style="font-family: 'Open Sans', sans-serif; font-size: 14px">
-                            Status: <span style="font-family: 'Open Sans', sans-serif; font-size: 14px"><strong>{Shortlisted} for further evaluation or {Rejected}</strong></span>
-                        </li>
-                      </ul>
+                      @if(status === 'Shortlisted')
+                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
+                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">Congratulations! Your
+                          application has been shortlisted for further evaluation. Our team was impressed with your
+                          qualifications, and we would like to invite you to the next phase of the selection process.
+                          You will receive a follow-up email outlining the details of the next steps, which may include
+                          interviews or assessments.</span></p>
+                      @else
+                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
+                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">While we were genuinely
+                          impressed with your application, we regret to inform you that we have chosen to move forward
+                          with other candidates at this time. The selection process is highly competitive, and decisions
+                          are often difficult to make. We appreciate your understanding and wish you the very best in
+                          your continued job search.</span></p>
+                      @end
 
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
 
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px"><strong>Next steps (If shortlisted):</strong></span></p>
-                        
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px">Congratulations! Your application has been shortlisted for further evaluation. Our team was impressed with your qualifications, and we would like to invite you to the next phase of the selection process. You will receive a follow-up email outlining the details of the next steps, which may include interviews or assessments.</span></p>
-                            
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px"><strong>Feedback (if rejected):</strong></span></p>
-                    
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                            style="font-family: 'Open Sans', sans-serif; font-size: 14px">While we were genuinely impressed with your application, we regret to inform you that we have chosen to move forward with other candidates at this time. The selection process is highly competitive, and decisions are often difficult to make. We appreciate your understanding and wish you the very best in your continued job search.</span></p>
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
-                    
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                          style="font-family: 'Open Sans', sans-serif; font-size: 14px"><strong>Stay connected:</strong></span></p>
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">We encourage you to stay connected with {Company Name} for future opportunities. Follow us on <a href="http://#" style="color: #0000ee">Facebook</a>, <a href="http://#" style="color: #0000ee">Instagram</a> & <a href="http://#" style="color: #0000ee">X</a> to receive updates on job openings, company news, and events.</span></p>
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
-                    
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">Once again, thank you for considering {Company Name} as part of your career journey. We wish you every success in your professional endeavors.</span></p>
-
-
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
-
-                        
-                      {{--  <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px">Thank you for choosing HeasyResource!</span></p>  --}}
 
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><br /><span
                           style="font-family: 'Open Sans', sans-serif; font-size: 14px">Best Regards,</span></p>
-
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">Raphael Fadimu</span>
+                          style="font-family: 'Open Sans', sans-serif; font-size: 14px">{{companyName}}.</span>
                       </p>
-                      <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px">Head of Recruitment,</span>
-                    </p>
-                    <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px">Drifty Inc.</span>
-                    </p>
-                    <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial"><span
-                        style="font-family: 'Open Sans', sans-serif; font-size: 14px"><a href="mailto:#" style="color: #0000ee">raphaelfadimu@driftyinc.com</a></span>
-                    </p>
                       <p style="font-size: 11px; font-family: Ubuntu, Helvetica, Arial">&nbsp;</p>
                     </div>
                   </td>
