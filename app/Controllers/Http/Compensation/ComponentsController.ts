@@ -1,7 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Component from 'App/Models/Component'
-// import UserComponent from 'App/Models/UserComponent'
-// import AddUserToComponentValidator from 'App/Validators/AddUserToComponentValidator'
+import UserComponent from 'App/Models/UserComponent'
+import AddUserComponentsValidator from 'App/Validators/AddUserComponentsValidator'
 import ComponentValidator from 'App/Validators/ComponentValidator'
 
 export default class ComponentsController {
@@ -116,26 +116,33 @@ export default class ComponentsController {
     })
   }
 
-//   public async addComponentsToUser({
-//     request,
-//     response,
-//     params: { userId },
-//   }: HttpContextContract) {
-//     // const validatedBody = await request.validate(AddUserToComponentValidator)
+  public async addComponentsToUser({ request, response, params: { userId } }: HttpContextContract) {
+    const { componentIds } = await request.validate(AddUserComponentsValidator)
 
-//   //  const payload = componentsId.map(id) => {
+    const payload = componentIds.map((componentId) => {
+      return {
+        userId,
+        componentId,
+      }
+    })
 
-//   //   })
+    await UserComponent.createMany(payload)
 
-//   //   await UserComponent.createMany({
-//   //     userId,
-//   //     id,
-//   //   })
+    return response.created({
+      status: 'Created',
+      message: 'Add user component successfully',
+      statusCode: 201,
+    })
+  }
 
-//     return response.created({
-//       status: 'Created',
-//       message: 'Created User component successfully',
-//       statusCode: 201,
-//     })
-//   }
+  public async fetchUserComponents({ response, params: { userId } }: HttpContextContract) {
+    const components = await UserComponent.query().where('userId', userId).preload('component')
+
+    return response.ok({
+      status: 'Success',
+      message: 'Fetched all components successfully',
+      statusCode: 200,
+      results: components,
+    })
+  }
 }
