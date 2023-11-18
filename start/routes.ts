@@ -24,7 +24,7 @@ Route.get('/', async () => {
   return { welcome: 'Heasyresource API' }
 })
 
-// Route.on('/email').render('emails/reset_password')
+Route.on('/email').render('emails/shortlist_applicant')
 
 Route.group(() => {
   Route.get('/', async () => {
