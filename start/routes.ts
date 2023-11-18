@@ -24,7 +24,7 @@ Route.get('/', async () => {
   return { welcome: 'Heasyresource API' }
 })
 
-Route.on('/email').render('emails/shortlist_applicant')
+Route.on('/email').render('emails/job_application')
 
 Route.group(() => {
   Route.get('/', async () => {
@@ -175,9 +175,12 @@ Route.group(() => {
     Route.put('/vacancies/:vacancyId', 'Hiring/VacanciesController.updateVacancy')
     Route.delete('/vacancies/:vacancyId', 'Hiring/VacanciesController.deleteVacancy')
   }).middleware(['auth:jwt', 'subdomain'])
-  Route.get('/vacancies/slug/:slug', 'Hiring/VacanciesController.getVacancyBySlug').middleware([
-    'subdomain',
-  ])
+
+  Route.group(() => {
+    Route.get('/vacancies/slug/:slug', 'Hiring/VacanciesController.getVacancyBySlug')
+    Route.get('/vacancies/published/all', 'Hiring/VacanciesController.getAllPublishedVacancies')
+  }).middleware(['subdomain'])
+  
   Route.post(
     '/vacancies/:vacancyId/apply',
     'Hiring/VacanciesController.applyForVacancy'
