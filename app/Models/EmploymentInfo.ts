@@ -35,7 +35,7 @@ export default class EmploymentInfo extends BaseModel {
   public resumptionDate: string
 
   @column()
-  public terminationDate: Date
+  public terminationDate: string
 
   @column()
   public status: string

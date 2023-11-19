@@ -24,6 +24,10 @@ import { parseStream } from 'fast-csv'
 import Application from '@ioc:Adonis/Core/Application'
 import UrlValidator from 'App/Validators/UrlValidator'
 import EmploymentStatuses from 'App/Enums/EmploymentStatuses'
+import Salary from 'App/Models/Salary'
+import EmployeeSalaryValidator from 'App/Validators/EmployeeSalaryValidator'
+import EmployeeStatusValidator from 'App/Validators/EmployeeStatusValidator'
+import { DateTime } from 'luxon'
 
 export default class EmployeesController {
   public async addEmployee({ request, response }: HttpContextContract) {
@@ -541,6 +545,33 @@ export default class EmployeesController {
     })
   }
 
+  public async addEmployeeSalary({ request, response, params: { userId } }: HttpContextContract) {
+    const validatedBody = await request.validate(EmployeeSalaryValidator)
+
+    const { grossSalary, frequency, currency } = validatedBody
+
+    await Salary.firstOrCreate(
+      {
+        userId,
+        grossSalary,
+        frequency,
+        currency,
+      },
+      {
+        userId,
+        grossSalary,
+        frequency,
+        currency,
+      }
+    )
+
+    response.ok({
+      status: 'Success',
+      message: 'Added employee salary successfully',
+      statusCode: '200',
+    })
+  }
+
   public async updateEmployeeEducation({
     request,
     response,
@@ -604,6 +635,27 @@ export default class EmployeesController {
     })
   }
 
+  public async updateEmployeeSalary({
+    request,
+    response,
+    params: { userId, salaryId },
+  }: HttpContextContract) {
+    const validatedBody = await request.validate(EmployeeSalaryValidator)
+
+    const employeeSalary = await Salary.query()
+      .where('id', salaryId)
+      .where('userId', userId)
+      .firstOrFail()
+
+    await employeeSalary.merge(validatedBody).save()
+
+    response.ok({
+      status: 'Success',
+      message: 'Updated employee salary successfully',
+      statusCode: '200',
+    })
+  }
+
   public async setEmployeeProfilePicture({
     request,
     response,
@@ -620,6 +672,33 @@ export default class EmployeesController {
     return response.ok({
       status: 'Success',
       message: 'Uploaded profile picture successfully.',
+      statusCode: 200,
+    })
+  }
+
+  public async setEmployeeEmploymentStatus({ request, response, params: { userId } }: HttpContextContract) {
+    const validatedBody = await request.validate(EmployeeStatusValidator)
+
+    const { status } = validatedBody
+
+    await Database.transaction(async (trx) => {
+      const employmentInfo = await EmploymentInfo.findByOrFail('userId', userId)
+      employmentInfo.status = status
+
+      if (EmploymentStatuses.TERMINATED) {
+        employmentInfo.terminationDate = DateTime.local().toFormat('yyyy-M-dd')
+      }
+      employmentInfo.useTransaction(trx)
+      await employmentInfo.save()
+
+      const user = await User.findByOrFail('id', userId)
+      user.isActive = status === EmploymentStatuses.EMPLOYED ? true : false
+      user.useTransaction(trx)
+      await user.save()
+    })
+    return response.ok({
+      status: 'Success',
+      message: 'Updated employee successfully.',
       statusCode: 200,
     })
   }

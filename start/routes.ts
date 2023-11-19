@@ -93,6 +93,8 @@ Route.group(() => {
       'Employee/EmployeesController.addEmployeeLicenseOrCertification'
     )
 
+    Route.post('/employees/:userId/salary', 'Employee/EmployeesController.addEmployeeSalary')
+
     Route.put(
       '/employees/:userId/educations/:educationId',
       'Employee/EmployeesController.updateEmployeeEducation'
@@ -105,6 +107,12 @@ Route.group(() => {
       '/employees/:userId/license-or-certifications/:licenseId',
       'Employee/EmployeesController.updateEmployeeLicenseOrCertification'
     )
+
+    Route.put(
+      '/employees/:userId/employment-status/',
+      'Employee/EmployeesController.setEmployeeEmploymentStatus'
+    )
+
     Route.get('/employees/:companyId', 'Employee/EmployeesController.fetchAllCompanyEmployees')
     Route.get(
       '/employees/:companyId/employee/:userId',
