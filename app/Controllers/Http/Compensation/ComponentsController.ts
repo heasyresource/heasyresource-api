@@ -1,7 +1,8 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Database from '@ioc:Adonis/Lucid/Database'
 import Component from 'App/Models/Component'
-// import UserComponent from 'App/Models/UserComponent'
-// import AddUserToComponentValidator from 'App/Validators/AddUserToComponentValidator'
+import UserComponent from 'App/Models/UserComponent'
+import AddUserComponentsValidator from 'App/Validators/AddUserComponentsValidator'
 import ComponentValidator from 'App/Validators/ComponentValidator'
 
 export default class ComponentsController {
@@ -116,26 +117,52 @@ export default class ComponentsController {
     })
   }
 
-//   public async addComponentsToUser({
-//     request,
-//     response,
-//     params: { userId },
-//   }: HttpContextContract) {
-//     // const validatedBody = await request.validate(AddUserToComponentValidator)
+  public async addComponentsToUser({ request, response, params: { userId } }: HttpContextContract) {
+    const { componentIds } = await request.validate(AddUserComponentsValidator)
 
-//   //  const payload = componentsId.map(id) => {
+    const existingComponents = await UserComponent.query()
+      .where('userId', userId)
+      .whereIn('componentId', componentIds)
+      .select('componentId')
 
-//   //   })
+    const existingComponentIds = existingComponents.map((component) => component.componentId)
+    const missingComponentIds = componentIds.filter(
+      (compId) => !existingComponentIds.includes(compId)
+    )
 
-//   //   await UserComponent.createMany({
-//   //     userId,
-//   //     id,
-//   //   })
+    if (missingComponentIds.length > 0) {
+      await Database.transaction(async (trx) => {
+        const payload = missingComponentIds.map((componentId) => {
+          return {
+            userId,
+            componentId,
+          }
+        })
 
-//     return response.created({
-//       status: 'Created',
-//       message: 'Created User component successfully',
-//       statusCode: 201,
-//     })
-//   }
+        await UserComponent.createMany(payload, trx)
+      })
+    }
+
+    await UserComponent.query()
+      .where('userId', userId)
+      .whereNotIn('componentId', [...missingComponentIds, ...existingComponentIds])
+      .delete()
+
+    return response.created({
+      status: 'Created',
+      message: 'Add user component successfully',
+      statusCode: 201,
+    })
+  }
+
+  public async fetchUserComponents({ response, params: { userId } }: HttpContextContract) {
+    const components = await UserComponent.query().where('userId', userId).preload('component')
+
+    return response.ok({
+      status: 'Success',
+      message: 'Fetched all components successfully',
+      statusCode: 200,
+      results: components,
+    })
+  }
 }

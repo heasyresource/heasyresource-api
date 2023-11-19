@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.uuid('id').primary()
       table.uuid('user_id').references('id').inTable('users').onDelete('CASCADE')
       table.decimal('gross_salary', 19, 4).notNullable()
-      table.enum('frequency', [Frequency.ANNUALLY, Frequency.MONTHLY, Frequency.QUARTERLY])
+      table.enum('frequency', [Frequency.ANNUALLY, Frequency.MONTHLY, Frequency.QUARTERLY, Frequency.WEEKLY])
       table.string('currency').notNullable()
       table.boolean('is_deleted').notNullable().defaultTo(false)
       table.timestamps(true, true)

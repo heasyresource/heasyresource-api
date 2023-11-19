@@ -1,16 +1,15 @@
 import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import EmploymentStatuses from 'App/Enums/EmploymentStatuses'
 
-export default class AddUserToComponentValidator {
+export default class EmployeeStatusValidator {
   constructor(protected ctx: HttpContextContract) {}
-
   public schema = schema.create({
-    userId: schema.string({ trim: true }),
-    componentId: schema.string({ trim: true }),
+    status: schema.enum(Object.values(EmploymentStatuses)),
   })
 
   public messages: CustomMessages = {
-    'userId.required': 'User is required',
-    'componentId.required': 'Component is required',
+    'status.required': 'Status is required.',
+    'status.enum': 'Please select a correct status.',
   }
 }
