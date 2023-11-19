@@ -5,6 +5,7 @@ import RejectApplicantValidator from 'App/Validators/RejectApplicantValidator'
 import ShortlistApplicantValidator from 'App/Validators/ShortlistApplicantValidator'
 import Statuses from 'App/Enums/Statuses'
 import Vacancy from 'App/Models/Vacancy'
+import ShortlistOrRejectApplicantEmail from 'App/Mailers/ShortlistOrRejectApplicantEmail'
 
 export default class ApplicantsController {
   public async getAllApplicants({ request, response }: HttpContextContract) {
@@ -139,7 +140,7 @@ export default class ApplicantsController {
     response,
     params: { applicantId },
   }: HttpContextContract) {
-    const applicant = await Applicant.query().where('id', applicantId).firstOrFail()
+    const applicant = await Applicant.query().where('id', applicantId).preload('vacancy').firstOrFail()
 
     const validatedBody = await request.validate(RejectApplicantValidator)
 
@@ -148,6 +149,8 @@ export default class ApplicantsController {
     applicant.status = Statuses.REJECTED
     applicant.reason = reason
     await applicant.save()
+
+    await new ShortlistOrRejectApplicantEmail(applicant, request.tenant, applicant.vacancy).sendLater()
 
     return response.ok({
       status: 'Success',
@@ -161,7 +164,7 @@ export default class ApplicantsController {
     response,
     params: { applicantId },
   }: HttpContextContract) {
-    const applicant = await Applicant.query().where('id', applicantId).firstOrFail()
+    const applicant = await Applicant.query().where('id', applicantId).preload('vacancy').firstOrFail()
 
     const validatedBody = await request.validate(ShortlistApplicantValidator)
 
@@ -170,6 +173,8 @@ export default class ApplicantsController {
     applicant.status = Statuses.SHORTLISTED
     applicant.reason = reason
     applicant.save()
+
+    await new ShortlistOrRejectApplicantEmail(applicant, request.tenant, applicant.vacancy).sendLater()
 
     return response.ok({
       status: 'Success',

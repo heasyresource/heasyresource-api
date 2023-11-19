@@ -9,7 +9,7 @@ export default class VerifyEmail extends BaseMailer {
   }
   public prepare(message: MessageContract) {
     const { firstName, lastName, email, verificationCode } = this.user
-    // const { companyName  } = this.company
+
     const noReplyMailFrom = Env.get('NOREPLY_MAIL_FROM', 'noreply@heasyresource.com');
     const AppName = Env.get('APP_NAME', 'HeasyResource');
     message

@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Statuses from 'App/Enums/Statuses'
+import JobApplicationEmail from 'App/Mailers/JobApplicationEmail'
 import Applicant from 'App/Models/Applicant'
 import Vacancy from 'App/Models/Vacancy'
 import AddVacancyValidator from 'App/Validators/AddVacancyValidator'
@@ -10,7 +11,8 @@ export default class VacanciesController {
     const page = request.input('page', 1)
     const perPage = request.input('perPage', 10)
     const companyId = request.input('companyId', request.tenant.id)
-    const { isActive, isPublished, employmentTypeId, jobCategoryId, workMode, search } = request.qs()
+    const { isActive, isPublished, employmentTypeId, jobCategoryId, workMode, search } =
+      request.qs()
 
     const vacancies = await Vacancy.query()
       .if(search, (query) => {
@@ -170,7 +172,7 @@ export default class VacanciesController {
       resumeUrl,
     } = validatedBody
 
-    await Applicant.firstOrCreate(
+    const applicant = await Applicant.firstOrCreate(
       { email, vacancyId: vacancy.id },
       {
         firstName,
@@ -187,10 +189,32 @@ export default class VacanciesController {
       }
     )
 
+    await new JobApplicationEmail(applicant, request.tenant, vacancy).sendLater()
+
     return response.created({
       status: 'Success',
       message: 'Applied successfully',
       statusCode: 201,
+    })
+  }
+
+  public async getAllPublishedVacancies({ request, response }: HttpContextContract) {
+    const companyId = request.input('companyId', request.tenant.id)
+
+    const vacancies = await Vacancy.query()
+      .where('companyId', companyId)
+      .where('isDeleted', false)
+      .where('isActive', true)
+      .where('isPublished', true)
+      .orderBy('createdAt', 'desc')
+      .preload('jobCategory')
+      .preload('employmentType')
+
+    return response.ok({
+      status: 'Success',
+      message: 'Fetched all published vacancies successfully',
+      statusCode: 200,
+      results: vacancies,
     })
   }
 }

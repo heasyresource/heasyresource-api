@@ -4,10 +4,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 export default class ResetPasswordValidator {
   constructor(protected ctx: HttpContextContract) {}
   public schema = schema.create({
-    resetPasswordCode: schema.string([
-      rules.maxLength(6),
-      rules.minLength(6)
-    ]),
+    resetPasswordCode: schema.string([rules.maxLength(6), rules.minLength(6)]),
     email: schema.string({ trim: true }, [
       rules.email(),
       rules.normalizeEmail({
@@ -16,7 +13,11 @@ export default class ResetPasswordValidator {
         gmailRemoveSubaddress: true,
       }),
     ]),
-    newPassword: schema.string([rules.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)]),
+    newPassword: schema.string({ trim: true }, [
+      rules.regex(
+        /^(?=.*[$&+,:;=?@#|'<>.^*()%!-])(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$&+,:;=?@#|'<>.^*()%!-]{8,}$/
+      ),
+    ]),
   })
 
   public messages: CustomMessages = {
@@ -26,6 +27,7 @@ export default class ResetPasswordValidator {
     'email.required': 'Email address is required.',
     'email.email': 'Email address must be a valid email address.',
     'newPassword.required': 'New password is required.',
-    'newPassword.regex': 'New password must be at least 8 characters long and contain at least one letter, one digit, and one special character.',
+    'newPassword.regex':
+      'New password must be at least 8 characters long and contain at least one letter, one digit, and one special character.',
   }
 }

@@ -28,6 +28,7 @@ import Salary from 'App/Models/Salary'
 import EmployeeSalaryValidator from 'App/Validators/EmployeeSalaryValidator'
 import EmployeeStatusValidator from 'App/Validators/EmployeeStatusValidator'
 import { DateTime } from 'luxon'
+import AddEmloyeeEmail from 'App/Mailers/AddEmloyeeEmail'
 
 export default class EmployeesController {
   public async addEmployee({ request, response }: HttpContextContract) {
@@ -87,8 +88,6 @@ export default class EmployeesController {
       user.useTransaction(trx)
       await user.save()
 
-      //   await new VerifyEmail(user).sendLater()
-
       const employmentInfo = new EmploymentInfo()
       employmentInfo.userId = user.id
       employmentInfo.position = position
@@ -104,6 +103,9 @@ export default class EmployeesController {
 
       employmentInfo.useTransaction(trx)
       await employmentInfo.save()
+
+      user.password = generatedPassword
+      await new AddEmloyeeEmail(user, request.tenant).sendLater()
     })
 
     return response.created({
