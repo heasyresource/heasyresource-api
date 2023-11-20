@@ -1,17 +1,21 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from '@ioc:Adonis/Lucid/Database'
+import Roles from 'App/Enums/Roles'
 import Statuses from 'App/Enums/Statuses'
 import Company from 'App/Models/Company'
 import EmploymentType from 'App/Models/EmploymentType'
+import Role from 'App/Models/Role'
 import { DateTime } from 'luxon'
 
 export default class AnalyticsController {
   public async getCompanyAnalytics({ params: { companyId }, response }: HttpContextContract) {
     const company = await Company.query().where('id', companyId).firstOrFail()
+    const companyAdminRole = await Role.findByOrFail('name', Roles.COMPANY_ADMIN)
 
     const users = await Database.from('users')
       .where('company_id', company.id)
       .where('is_deleted', false)
+      .whereNot('role_id', companyAdminRole.id)
       .count('*', 'total')
 
     const today = DateTime.now()
@@ -21,6 +25,7 @@ export default class AnalyticsController {
     const newUsers = await Database.from('users')
       .where('company_id', company.id)
       .where('is_deleted', false)
+      .whereNot('role_id', companyAdminRole.id)
       .where('created_at', '>=', startOfPastWeek.toJSDate())
       .count('*', 'total')
 
