@@ -133,6 +133,12 @@ Route.group(() => {
     Route.put('/companies/:companyId', 'Company/CompaniesController.updateCompanyDetails')
   }).middleware(['auth:jwt'])
 
+  // COMPANY ANALYTICS ROUTES
+  Route.group(() => {
+    Route.get('/analytics/companies/:companyId', 'Analytics/AnalyticsController.getCompanyAnalytics')
+    Route.get('/analytics/', 'Analytics/AnalyticsController.getAdminAnalytics')
+  }).middleware(['auth:jwt', 'subdomain'])
+
   // METADATA ROUTE
   Route.get('/metadata', 'MetaData/MetaDataController.metadata')
 

@@ -71,6 +71,14 @@ export default class CompaniesController {
     response,
   }: HttpContextContract) {
     const company = await Company.query().where('id', companyId).firstOrFail()
+
+    if (!company.isCompletedRegistration) {
+      return response.badRequest({
+        status: 'Bad Request',
+        message: 'This company has not completed their registration',
+        statusCode: 400,
+      })
+    }
     const { status } = await request.validate(CompanyStatusValidator)
 
     const oldStatus = company.status
