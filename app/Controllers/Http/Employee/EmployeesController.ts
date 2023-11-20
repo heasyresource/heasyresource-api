@@ -408,6 +408,7 @@ export default class EmployeesController {
         builder.preload('country').preload('state').preload('lga')
       })
       .preload('nextOfKin')
+      .preload('salary')
       .preload('educations')
       .preload('workExperiences', (builder) => {
         builder.preload('employmentType')
