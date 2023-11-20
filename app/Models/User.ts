@@ -24,6 +24,7 @@ import NextOfKin from './NextOfKin'
 import Education from './Education'
 import WorkExperience from './WorkExperience'
 import LicenseOrCertification from './LicenseOrCertification'
+import Salary from './Salary'
 
 export default class User extends BaseModel {
   public static selfAssignPrimaryKey = true
@@ -124,6 +125,9 @@ export default class User extends BaseModel {
 
   @hasOne(() => ContactDetail)
   public contactDetail: HasOne<typeof ContactDetail>
+
+  @hasOne(() => Salary)
+  public salary: HasOne<typeof Salary>
 
   @hasMany(() => NextOfKin)
   public nextOfKin: HasMany<typeof NextOfKin>
