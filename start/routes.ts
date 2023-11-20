@@ -93,7 +93,7 @@ Route.group(() => {
       'Employee/EmployeesController.addEmployeeLicenseOrCertification'
     )
 
-    Route.post('/employees/:userId/salary', 'Employee/EmployeesController.addEmployeeSalary')
+    Route.put('/employees/:userId/salary', 'Employee/EmployeesController.updateEmployeeSalary')
 
     Route.put(
       '/employees/:userId/educations/:educationId',
