@@ -135,10 +135,14 @@ Route.group(() => {
 
   // COMPANY ANALYTICS ROUTES
   Route.group(() => {
-    Route.get('/analytics/companies/:companyId', 'Analytics/AnalyticsController.getCompanyAnalytics')
-    Route.get('/analytics/', 'Analytics/AnalyticsController.getAdminAnalytics')
+    Route.get(
+      '/analytics/companies/:companyId',
+      'Analytics/AnalyticsController.getCompanyAnalytics'
+    )
   }).middleware(['auth:jwt', 'subdomain'])
-
+  Route.get('/analytics/', 'Analytics/AnalyticsController.getAdminAnalytics').middleware([
+    'auth:jwt',
+  ])
   // METADATA ROUTE
   Route.get('/metadata', 'MetaData/MetaDataController.metadata')
 
@@ -195,7 +199,7 @@ Route.group(() => {
     Route.get('/vacancies/slug/:slug', 'Hiring/VacanciesController.getVacancyBySlug')
     Route.get('/vacancies/published/all', 'Hiring/VacanciesController.getAllPublishedVacancies')
   }).middleware(['subdomain'])
-  
+
   Route.post(
     '/vacancies/:vacancyId/apply',
     'Hiring/VacanciesController.applyForVacancy'
