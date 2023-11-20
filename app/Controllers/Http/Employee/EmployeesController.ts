@@ -548,32 +548,6 @@ export default class EmployeesController {
     })
   }
 
-  public async addEmployeeSalary({ request, response, params: { userId } }: HttpContextContract) {
-    const validatedBody = await request.validate(EmployeeSalaryValidator)
-
-    const { grossSalary, frequency, currency } = validatedBody
-
-    await Salary.firstOrCreate(
-      {
-        userId,
-        grossSalary,
-        frequency,
-        currency,
-      },
-      {
-        userId,
-        grossSalary,
-        frequency,
-        currency,
-      }
-    )
-
-    response.ok({
-      status: 'Success',
-      message: 'Added employee salary successfully',
-      statusCode: '200',
-    })
-  }
 
   public async updateEmployeeEducation({
     request,
@@ -641,16 +615,20 @@ export default class EmployeesController {
   public async updateEmployeeSalary({
     request,
     response,
-    params: { userId, salaryId },
+    params: { userId },
   }: HttpContextContract) {
     const validatedBody = await request.validate(EmployeeSalaryValidator)
 
-    const employeeSalary = await Salary.query()
-      .where('id', salaryId)
-      .where('userId', userId)
-      .firstOrFail()
+    const { grossSalary, frequency, currency } = validatedBody
 
-    await employeeSalary.merge(validatedBody).save()
+    const searchPayload = { userId }
+    const persistancePayload = {
+      grossSalary,
+      frequency,
+      currency,
+    }
+
+    await Salary.updateOrCreate(searchPayload, persistancePayload)
 
     response.ok({
       status: 'Success',
@@ -679,7 +657,11 @@ export default class EmployeesController {
     })
   }
 
-  public async setEmployeeEmploymentStatus({ request, response, params: { userId } }: HttpContextContract) {
+  public async setEmployeeEmploymentStatus({
+    request,
+    response,
+    params: { userId },
+  }: HttpContextContract) {
     const validatedBody = await request.validate(EmployeeStatusValidator)
 
     const { status } = validatedBody
