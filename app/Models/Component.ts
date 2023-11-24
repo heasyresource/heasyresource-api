@@ -28,10 +28,10 @@ export default class Component extends BaseModel {
   public isFixed: boolean
 
   @column()
-  public rate: string
+  public rate: string | null | undefined
 
   @column()
-  public amount: number
+  public amount: number | null | undefined
 
   @column()
   public frequency: string

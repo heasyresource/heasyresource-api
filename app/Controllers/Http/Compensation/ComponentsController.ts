@@ -88,8 +88,11 @@ export default class ComponentsController {
       .firstOrFail()
 
     const validatedBody = await request.validate(ComponentValidator)
-
-    await component.merge(validatedBody).save()
+    
+    const amount = validatedBody.isFixed ? validatedBody.amount: null
+    const rate = !validatedBody.isFixed ? validatedBody.rate: null
+    
+    await component.merge({...validatedBody, amount, rate}).save()
 
     return response.ok({
       status: 'Success',
