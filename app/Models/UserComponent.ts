@@ -46,7 +46,7 @@ export default class UserComponent extends BaseModel {
 
   @belongsTo(() => Component, {
     onQuery: (query) => {
-      query.select('name')
+      query.select('name', 'type')
     },
   })
   public component: BelongsTo<typeof Component>
