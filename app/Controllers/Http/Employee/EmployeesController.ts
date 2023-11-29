@@ -414,13 +414,27 @@ export default class EmployeesController {
         builder.preload('employmentType')
       })
       .preload('licenseOrCertifications')
+      .preload('components', (builder) => {
+        builder.preload('component')
+      })
       .first()
 
+    const serializedEmployee = employee?.serialize({
+      relations: {
+        components: {
+          relations: {
+            component: {
+              fields: ['id', 'name', 'type'],
+            },
+          },
+        },
+      },
+    })
     return response.ok({
       status: 'Success',
       message: 'Fetched employee successfully.',
       statusCode: 200,
-      results: employee,
+      results: serializedEmployee,
     })
   }
 
@@ -547,7 +561,6 @@ export default class EmployeesController {
       statusCode: '200',
     })
   }
-
 
   public async updateEmployeeEducation({
     request,

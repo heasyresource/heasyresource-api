@@ -25,6 +25,7 @@ import Education from './Education'
 import WorkExperience from './WorkExperience'
 import LicenseOrCertification from './LicenseOrCertification'
 import Salary from './Salary'
+import UserComponent from './UserComponent'
 
 export default class User extends BaseModel {
   public static selfAssignPrimaryKey = true
@@ -140,6 +141,9 @@ export default class User extends BaseModel {
 
   @hasMany(() => LicenseOrCertification)
   public licenseOrCertifications: HasMany<typeof LicenseOrCertification>
+
+  @hasMany(() => UserComponent)
+  public components: HasMany<typeof UserComponent>
 
   @beforeFetch()
   @beforeFind()
