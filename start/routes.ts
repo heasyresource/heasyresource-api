@@ -227,4 +227,10 @@ Route.group(() => {
     Route.post('/components/user/:userId', 'Compensation/ComponentsController.addComponentsToUser')
     Route.get('/components/user/:userId', 'Compensation/ComponentsController.fetchUserComponents')
   }).middleware(['auth:jwt', 'subdomain'])
+
+
+  Route.group(() => {
+    Route.post('/payrolls', 'Compensation/PayrollsController.runPayroll')
+  }).middleware(['auth:jwt', 'subdomain'])
+
 }).prefix('/api/v1')

@@ -110,7 +110,7 @@ export default class EmployeeService {
               }),
               rules.unique({ table: 'users', column: 'email' }),
             ]),
-            phoneNumber: schema.string({ trim: true }, [
+            phoneNumber: schema.string.optional({ trim: true }, [
               rules.mobile({
                 strict: false,
                 locale: ['en-NG'],
@@ -128,7 +128,7 @@ export default class EmployeeService {
               }),
             ]),
             employeeID: schema.string.optional({ trim: true }),
-            dateOfBirth: schema.date({
+            dateOfBirth: schema.date.optional({
               format: 'yyyy-MM-dd',
             }),
           }),

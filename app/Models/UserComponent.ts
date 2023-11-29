@@ -27,10 +27,10 @@ export default class UserComponent extends BaseModel {
   @column({ serializeAs: null })
   public isDeleted: boolean
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: null })
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
 
   @beforeCreate()
@@ -44,10 +44,6 @@ export default class UserComponent extends BaseModel {
     query.where('isDeleted', false)
   }
 
-  @belongsTo(() => Component, {
-    onQuery: (query) => {
-      query.select('name', 'type')
-    },
-  })
+  @belongsTo(() => Component)
   public component: BelongsTo<typeof Component>
 }
