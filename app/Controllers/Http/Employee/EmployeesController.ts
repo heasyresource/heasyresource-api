@@ -128,7 +128,7 @@ export default class EmployeesController {
       return new Promise((resolve, reject) => {
         const stream = fs.createReadStream(Application.tmpPath() + '/' + employeesFileURL)
 
-        parseStream(stream, { headers: true, ignoreEmpty: true, maxRows: 10, trim: true })
+        parseStream(stream, { headers: true, ignoreEmpty: true, maxRows: 100, trim: true })
           .on('error', (error) => console.error(error))
           .on('data', (row) => {
             employees.push(row)
@@ -149,7 +149,7 @@ export default class EmployeesController {
                 })
               })
               .catch((err) => {
-                console.error(err.messages)
+                console.error("addBulkEmployee ERROR ==> ",err)
                 reject(err)
               })
           })

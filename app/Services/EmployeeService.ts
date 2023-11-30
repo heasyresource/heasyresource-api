@@ -10,6 +10,7 @@ import Role from 'App/Models/Role'
 import Roles from 'App/Enums/Roles'
 import EmploymentInfo from 'App/Models/EmploymentInfo'
 import { Queue } from '@ioc:Rlanz/Queue'
+import EmploymentStatuses from 'App/Enums/EmploymentStatuses'
 
 export default class EmployeeService {
   private static getCompanyInitials(companyName) {
@@ -264,6 +265,7 @@ export default class EmployeeService {
       employmentInfo.userId = user.id
       employmentInfo.position = position
       employmentInfo.departmentId = department.id
+      employmentInfo.status = EmploymentStatuses.EMPLOYED;
       employmentInfo.employeeId = !autoGenerateEmployeeId
         ? employeeID
         : await EmployeeService.generateEmployeeId(employeeIdFormat, department.id, companyName)
